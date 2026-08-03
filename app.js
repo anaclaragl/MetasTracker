@@ -263,10 +263,23 @@ function initNavigation() {
     document.getElementById('global-add-btn').addEventListener('click', () => {
         const activeTab = document.querySelector('.tab-content.active').id;
         if (activeTab === 'tab-projects') {
+            document.getElementById('form-project').reset();
+            document.getElementById('project-id').value = '';
+            document.getElementById('subtask-inputs-list').innerHTML = '';
+            document.getElementById('modal-project-title').textContent = 'Novo Projeto / Ideia';
+            addSubtaskInputField();
             openModal('modal-project');
         } else if (activeTab === 'tab-milestones') {
+            document.getElementById('form-milestone').reset();
+            document.getElementById('milestone-id').value = '';
+            document.getElementById('milestone-step-inputs-list').innerHTML = '';
+            document.getElementById('modal-milestone-title').textContent = 'Nova Grande Meta';
+            addMilestoneStepInputField();
             openModal('modal-milestone');
         } else {
+            document.getElementById('form-habit').reset();
+            document.getElementById('habit-id').value = '';
+            document.getElementById('modal-habit-title').textContent = 'Novo Hábito / Meta Diária';
             openModal('modal-habit');
         }
     });
@@ -383,9 +396,13 @@ function renderDashboard() {
                             <div style="font-size: 0.75rem; color: var(--text-secondary);">${habit.current} de ${habit.target} ${escapeHtml(habit.unit)}</div>
                         </div>
                     </div>
-                    <div class="counter-controls">
-                        <button class="btn-counter" onclick="adjustHabitCount('${habit.id}', -1)">-</button>
-                        <button class="btn-counter" onclick="adjustHabitCount('${habit.id}', 1)">+</button>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div class="counter-controls">
+                            <button class="btn-counter" onclick="adjustHabitCount('${habit.id}', -1)">-</button>
+                            <button class="btn-counter" onclick="adjustHabitCount('${habit.id}', 1)">+</button>
+                        </div>
+                        <button class="btn-icon" onclick="openEditHabitModal('${habit.id}')" title="Editar" style="color: var(--text-muted);"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn-icon" onclick="deleteHabit('${habit.id}')" title="Excluir" style="color: var(--text-muted);"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 `;
                 habitsList.appendChild(item);

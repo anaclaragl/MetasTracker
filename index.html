@@ -1,278 +1,284 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MetasTracker | Gerenciador de Metas, Hábitos e Projetos</title>
-    <meta name="description" content="Acompanhe seus hábitos diários, ideias, projetos em produção e grandes metas de carreira em um único lugar.">
+    <meta name="description"
+        content="Acompanhe seus hábitos diários, ideias, projetos em produção e grandes metas de carreira em um único lugar.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link rel="stylesheet" href="styles.css?v=12">
+    <link rel="stylesheet" href="styles.css?v=15">
 </head>
+
 <body>
     <div class="app-container">
         <div class="app-body">
             <!-- Sidebar Navigation -->
             <aside class="sidebar">
-            <div class="brand">
-                <div class="brand-logo">
-                    <i class="fa-solid fa-bullseye"></i>
+                <div class="brand">
+                    <div class="brand-logo">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h2>Metas<span>Tracker</span></h2>
+                        <span class="brand-tagline">Conquiste Seus Objetivos</span>
+                    </div>
                 </div>
-                <div class="brand-text">
-                    <h2>Metas<span>Tracker</span></h2>
-                    <span class="brand-tagline">Conquiste Seus Objetivos</span>
-                </div>
-            </div>
 
-            <nav class="nav-menu">
-                <button class="nav-item active" data-tab="dashboard">
-                    <i class="fa-solid fa-chart-pie"></i>
-                    <span>Dashboard</span>
-                </button>
-                <button class="nav-item" data-tab="habits">
-                    <i class="fa-solid fa-fire"></i>
-                    <span>Hábitos Diários</span>
-                    <span class="badge" id="habits-badge">0</span>
-                </button>
-                <button class="nav-item" data-tab="projects">
-                    <i class="fa-solid fa-kanban"></i>
-                    <span>Projetos & Ideias</span>
-                    <span class="badge" id="projects-badge">0</span>
-                </button>
-                <button class="nav-item" data-tab="milestones">
-                    <i class="fa-solid fa-trophy"></i>
-                    <span>Grandes Metas</span>
-                </button>
-                <button class="nav-item" data-tab="analytics">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span>Estatísticas</span>
-                </button>
-            </nav>
+                <nav class="nav-menu">
+                    <button class="nav-item active" data-tab="dashboard">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button class="nav-item" data-tab="habits">
+                        <i class="fa-solid fa-fire"></i>
+                        <span>Hábitos Diários</span>
+                        <span class="badge" id="habits-badge">0</span>
+                    </button>
+                    <button class="nav-item" data-tab="projects">
+                        <i class="fa-solid fa-kanban"></i>
+                        <span>Projetos & Ideias</span>
+                        <span class="badge" id="projects-badge">0</span>
+                    </button>
+                    <button class="nav-item" data-tab="milestones">
+                        <i class="fa-solid fa-trophy"></i>
+                        <span>Grandes Metas</span>
+                    </button>
+                    <button class="nav-item" data-tab="analytics">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Estatísticas</span>
+                    </button>
+                </nav>
 
-            <div class="sidebar-footer">
-                <button id="theme-toggle-btn" class="btn-icon-label" title="Alternar Tema">
-                    <i class="fa-solid fa-moon"></i>
-                    <span id="theme-btn-text">Modo Escuro</span>
-                </button>
-                <button id="backup-btn" class="btn-icon-label" title="Exportar/Importar Dados">
-                    <i class="fa-solid fa-database"></i>
-                    <span>Backup & Dados</span>
-                </button>
-            </div>
-        </aside>
-
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <!-- Top Header -->
-            <header class="top-header">
-                <div class="header-title">
-                    <h1 id="page-title">Dashboard</h1>
-                    <p id="page-subtitle" class="subtitle">Visão geral do seu progresso, hábitos do dia e projetos ativos.</p>
-                </div>
-                <div class="header-actions">
-                    <button class="btn btn-primary" id="global-add-btn">
-                        <i class="fa-solid fa-plus"></i> Novo Item
+                <div class="sidebar-footer">
+                    <button id="theme-toggle-btn" class="btn-icon-label" title="Alternar Tema">
+                        <i class="fa-solid fa-moon"></i>
+                        <span id="theme-btn-text">Modo Escuro</span>
+                    </button>
+                    <button id="backup-btn" class="btn-icon-label" title="Exportar/Importar Dados">
+                        <i class="fa-solid fa-database"></i>
+                        <span>Backup & Dados</span>
                     </button>
                 </div>
-            </header>
+            </aside>
 
-            <!-- TAB 1: DASHBOARD -->
-            <section id="tab-dashboard" class="tab-content active">
-                <!-- Motivation Banner -->
-                <div class="banner-card">
-                    <div class="banner-content">
-                        <span class="banner-tag"><i class="fa-solid fa-bolt"></i> Foco do Dia</span>
-                        <h2 id="quote-text">"O segredo para progredir é começar."</h2>
-                        <p id="quote-author">— Mark Twain</p>
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <!-- Top Header -->
+                <header class="top-header">
+                    <div class="header-title">
+                        <h1 id="page-title">Dashboard</h1>
+                        <p id="page-subtitle" class="subtitle">Visão geral do seu progresso, hábitos do dia e projetos
+                            ativos.</p>
                     </div>
-                    <div class="banner-metrics">
-                        <div class="metric-circle">
-                            <svg viewBox="0 0 36 36" class="circular-chart">
-                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                <path class="circle" id="dashboard-progress-circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                <text x="18" y="20.35" class="percentage" id="dashboard-progress-text">0%</text>
-                            </svg>
-                            <span>Conclusão Hoje</span>
-                        </div>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="global-add-btn">
+                            <i class="fa-solid fa-plus"></i> Novo Item
+                        </button>
                     </div>
-                </div>
+                </header>
 
-                <!-- Metric Cards -->
-                <div class="grid-cards-4">
-                    <div class="stat-card">
-                        <div class="stat-icon icon-emerald"><i class="fa-solid fa-check-double"></i></div>
-                        <div class="stat-info">
-                            <span class="stat-label">Hábitos Hoje</span>
-                            <h3 id="stat-habits-completed">0 / 0</h3>
+                <!-- TAB 1: DASHBOARD -->
+                <section id="tab-dashboard" class="tab-content active">
+                    <!-- Metric Cards -->
+                    <div class="grid-cards-4">
+                        <div class="stat-card" style="gap: 1.25rem;">
+                            <div class="metric-circle">
+                                <svg viewBox="0 0 36 36" class="circular-chart" style="width: 50px; height: 50px;">
+                                    <path class="circle-bg"
+                                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path class="circle" id="dashboard-progress-circle" stroke-dasharray="0, 100"
+                                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <text x="18" y="20.35" class="percentage" id="dashboard-progress-text" style="font-size: 0.75rem;">0%</text>
+                                </svg>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Conclusão Hoje</span>
+                                <h3 style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; margin-top: 2px;">Progresso Geral</h3>
+                            </div>
                         </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon icon-amber"><i class="fa-solid fa-fire"></i></div>
-                        <div class="stat-info">
-                            <span class="stat-label">Maior Sequência</span>
-                            <h3 id="stat-best-streak">0 dias</h3>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-emerald"><i class="fa-solid fa-check-double"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Hábitos Hoje</span>
+                                <h3 id="stat-habits-completed">0 / 0</h3>
+                            </div>
                         </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon icon-indigo"><i class="fa-solid fa-rocket"></i></div>
-                        <div class="stat-info">
-                            <span class="stat-label">Projetos Ativos</span>
-                            <h3 id="stat-active-projects">0</h3>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-amber"><i class="fa-solid fa-fire"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Maior Sequência</span>
+                                <h3 id="stat-best-streak">0 dias</h3>
+                            </div>
                         </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon icon-purple"><i class="fa-solid fa-flag-checkered"></i></div>
-                        <div class="stat-info">
-                            <span class="stat-label">Grandes Metas</span>
-                            <h3 id="stat-milestones-count">0</h3>
+                        <div class="stat-card">
+                            <div class="stat-icon icon-indigo"><i class="fa-solid fa-rocket"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Projetos Ativos</span>
+                                <h3 id="stat-active-projects">0</h3>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Dashboard Content Split -->
-                <div class="dashboard-grid">
-                    <!-- Left: Today's Habit Quick List -->
-                    <div class="content-box">
-                        <div class="box-header">
-                            <h3><i class="fa-solid fa-list-check icon-primary"></i> Hábitos Prioritários Hoje</h3>
-                            <button class="btn-text" data-switch-tab="habits">Ver Todos <i class="fa-solid fa-arrow-right"></i></button>
-                        </div>
-                        <div id="dashboard-habits-list" class="items-list">
-                            <!-- Populated dynamically -->
-                        </div>
-                    </div>
-
-                    <!-- Right: Active Projects & Focus -->
-                    <div class="content-box">
-                        <div class="box-header">
-                            <h3><i class="fa-solid fa-laptop-code icon-primary"></i> Projetos em Destaque</h3>
-                            <button class="btn-text" data-switch-tab="projects">Ver Quadro <i class="fa-solid fa-arrow-right"></i></button>
-                        </div>
-                        <div id="dashboard-projects-list" class="items-list">
-                            <!-- Populated dynamically -->
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 2: HABITS & DAILY TARGETS -->
-            <section id="tab-habits" class="tab-content">
-                <div class="section-toolbar">
-                    <div class="search-filter">
-                        <div class="input-with-icon">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="habit-search" placeholder="Buscar hábito ou meta diária...">
-                        </div>
-                        <select id="habit-filter-category">
-                            <option value="all">Todas as Categorias</option>
-                            <option value="carreira">Carreira / Emprego</option>
-                            <option value="estudo">Estudo & Aprendizado</option>
-                            <option value="saude">Saúde & Bem-Estar</option>
-                            <option value="produtividade">Produtividade</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-primary" id="add-habit-btn">
-                        <i class="fa-solid fa-plus"></i> Criar Hábito
-                    </button>
-                </div>
-
-                <div class="habits-grid" id="habits-cards-container">
-                    <!-- Cards render dynamically -->
-                </div>
-            </section>
-
-            <!-- TAB 3: PROJECTS & IDEAS (KANBAN BOARD) -->
-            <section id="tab-projects" class="tab-content">
-                <div class="section-toolbar">
-                    <div class="search-filter">
-                        <div class="input-with-icon">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="project-search" placeholder="Buscar projeto ou ideia...">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" id="add-project-btn">
-                        <i class="fa-solid fa-plus"></i> Novo Projeto / Ideia
-                    </button>
-                </div>
-
-                <!-- Kanban Board Columns -->
-                <div class="kanban-board">
-                    <!-- Column 1: Ideas / Backlog -->
-                    <div class="kanban-col" data-status="idea">
-                        <div class="col-header header-idea">
-                            <span class="col-title"><i class="fa-regular fa-lightbulb"></i> Ideias em Mente</span>
-                            <span class="col-count" id="count-idea">0</span>
-                        </div>
-                        <div class="col-body" id="col-body-idea">
-                            <!-- Cards render dynamically -->
+                        <div class="stat-card">
+                            <div class="stat-icon icon-purple"><i class="fa-solid fa-flag-checkered"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Grandes Metas</span>
+                                <h3 id="stat-milestones-count">0</h3>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Column 2: In Production -->
-                    <div class="kanban-col" data-status="in-progress">
-                        <div class="col-header header-progress">
-                            <span class="col-title"><i class="fa-solid fa-spinner"></i> Em Produção</span>
-                            <span class="col-count" id="count-progress">0</span>
+                    <!-- Dashboard Content Split -->
+                    <div class="dashboard-grid">
+                        <!-- Left: Today's Habit Quick List -->
+                        <div class="content-box">
+                            <div class="box-header">
+                                <h3><i class="fa-solid fa-list-check icon-primary"></i> Hábitos Prioritários Hoje</h3>
+                                <button class="btn-text" data-switch-tab="habits">Ver Todos <i
+                                        class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                            <div id="dashboard-habits-list" class="items-list">
+                                <!-- Populated dynamically -->
+                            </div>
                         </div>
-                        <div class="col-body" id="col-body-progress">
-                            <!-- Cards render dynamically -->
+
+                        <!-- Right: Active Projects & Focus -->
+                        <div class="content-box">
+                            <div class="box-header">
+                                <h3><i class="fa-solid fa-laptop-code icon-primary"></i> Projetos em Destaque</h3>
+                                <button class="btn-text" data-switch-tab="projects">Ver Quadro <i
+                                        class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                            <div id="dashboard-projects-list" class="items-list">
+                                <!-- Populated dynamically -->
+                            </div>
                         </div>
                     </div>
+                </section>
 
-                    <!-- Column 3: Completed / Launched -->
-                    <div class="kanban-col" data-status="completed">
-                        <div class="col-header header-completed">
-                            <span class="col-title"><i class="fa-solid fa-circle-check"></i> Concluídos / Lançados</span>
-                            <span class="col-count" id="count-completed">0</span>
+                <!-- TAB 2: HABITS & DAILY TARGETS -->
+                <section id="tab-habits" class="tab-content">
+                    <div class="section-toolbar">
+                        <div class="search-filter">
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="habit-search" placeholder="Buscar hábito ou meta diária...">
+                            </div>
+                            <select id="habit-filter-category">
+                                <option value="all">Todas as Categorias</option>
+                                <option value="carreira">Carreira / Emprego</option>
+                                <option value="estudo">Estudo & Aprendizado</option>
+                                <option value="saude">Saúde & Bem-Estar</option>
+                                <option value="produtividade">Produtividade</option>
+                            </select>
                         </div>
-                        <div class="col-body" id="col-body-completed">
-                            <!-- Cards render dynamically -->
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 4: MILESTONES (GRANDES METAS) -->
-            <section id="tab-milestones" class="tab-content">
-                <div class="section-toolbar">
-                    <div class="search-filter">
-                        <p class="section-desc">Metas estratégicas de médio e longo prazo com planos de ação práticos.</p>
-                    </div>
-                    <button class="btn btn-primary" id="add-milestone-btn">
-                        <i class="fa-solid fa-plus"></i> Nova Grande Meta
-                    </button>
-                </div>
-
-                <div class="milestones-container" id="milestones-cards-container">
-                    <!-- Render dynamically -->
-                </div>
-            </section>
-
-            <!-- TAB 5: ANALYTICS -->
-            <section id="tab-analytics" class="tab-content">
-                <div class="analytics-grid">
-                    <div class="content-box">
-                        <h3><i class="fa-solid fa-chart-bar icon-primary"></i> Desempenho dos Útimos 7 Dias</h3>
-                        <div class="chart-bars-container" id="weekly-bars-chart">
-                            <!-- Bars render dynamically -->
-                        </div>
+                        <button class="btn btn-primary" id="add-habit-btn">
+                            <i class="fa-solid fa-plus"></i> Criar Hábito
+                        </button>
                     </div>
 
-                    <div class="content-box">
-                        <h3><i class="fa-solid fa-pie-chart icon-primary"></i> Distribuição por Categorias</h3>
-                        <div class="category-distribution-list" id="category-distribution">
-                            <!-- Categories list dynamically -->
+                    <div class="habits-grid" id="habits-cards-container">
+                        <!-- Cards render dynamically -->
+                    </div>
+                </section>
+
+                <!-- TAB 3: PROJECTS & IDEAS (KANBAN BOARD) -->
+                <section id="tab-projects" class="tab-content">
+                    <div class="section-toolbar">
+                        <div class="search-filter">
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="project-search" placeholder="Buscar projeto ou ideia...">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="add-project-btn">
+                            <i class="fa-solid fa-plus"></i> Novo Projeto / Ideia
+                        </button>
+                    </div>
+
+                    <!-- Kanban Board Columns -->
+                    <div class="kanban-board">
+                        <!-- Column 1: Ideas / Backlog -->
+                        <div class="kanban-col" data-status="idea">
+                            <div class="col-header header-idea">
+                                <span class="col-title"><i class="fa-regular fa-lightbulb"></i> Ideias em Mente</span>
+                                <span class="col-count" id="count-idea">0</span>
+                            </div>
+                            <div class="col-body" id="col-body-idea">
+                                <!-- Cards render dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Column 2: In Production -->
+                        <div class="kanban-col" data-status="in-progress">
+                            <div class="col-header header-progress">
+                                <span class="col-title"><i class="fa-solid fa-spinner"></i> Em Produção</span>
+                                <span class="col-count" id="count-progress">0</span>
+                            </div>
+                            <div class="col-body" id="col-body-progress">
+                                <!-- Cards render dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Column 3: Completed / Launched -->
+                        <div class="kanban-col" data-status="completed">
+                            <div class="col-header header-completed">
+                                <span class="col-title"><i class="fa-solid fa-circle-check"></i> Concluídos /
+                                    Lançados</span>
+                                <span class="col-count" id="count-completed">0</span>
+                            </div>
+                            <div class="col-body" id="col-body-completed">
+                                <!-- Cards render dynamically -->
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </main>
+                </section>
+
+                <!-- TAB 4: MILESTONES (GRANDES METAS) -->
+                <section id="tab-milestones" class="tab-content">
+                    <div class="section-toolbar">
+                        <div class="search-filter">
+                            <p class="section-desc">Metas estratégicas de médio e longo prazo com planos de ação
+                                práticos.</p>
+                        </div>
+                        <button class="btn btn-primary" id="add-milestone-btn">
+                            <i class="fa-solid fa-plus"></i> Nova Grande Meta
+                        </button>
+                    </div>
+
+                    <div class="milestones-container" id="milestones-cards-container">
+                        <!-- Render dynamically -->
+                    </div>
+                </section>
+
+                <!-- TAB 5: ANALYTICS -->
+                <section id="tab-analytics" class="tab-content">
+                    <div class="analytics-grid">
+                        <div class="content-box">
+                            <h3><i class="fa-solid fa-chart-bar icon-primary"></i> Desempenho dos Útimos 7 Dias</h3>
+                            <div class="chart-bars-container" id="weekly-bars-chart">
+                                <!-- Bars render dynamically -->
+                            </div>
+                        </div>
+
+                        <div class="content-box">
+                            <h3><i class="fa-solid fa-pie-chart icon-primary"></i> Distribuição por Categorias</h3>
+                            <div class="category-distribution-list" id="category-distribution">
+                                <!-- Categories list dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
         </div> <!-- Close app-body -->
     </div> <!-- Close app-container -->
 
@@ -287,7 +293,8 @@
                 <input type="hidden" id="habit-id">
                 <div class="form-group">
                     <label for="habit-title">Nome do Hábito / Meta *</label>
-                    <input type="text" id="habit-title" placeholder="Ex: Mandar currículos, Estudar React, Beber água" required>
+                    <input type="text" id="habit-title" placeholder="Ex: Mandar currículos, Estudar React, Beber água"
+                        required>
                 </div>
 
                 <div class="form-row-2">
@@ -297,7 +304,8 @@
                     </div>
                     <div class="form-group">
                         <label for="habit-unit">Unidade de Medida</label>
-                        <input type="text" id="habit-unit" placeholder="Ex: currículos, minutos, páginas" value="unidades">
+                        <input type="text" id="habit-unit" placeholder="Ex: currículos, minutos, páginas"
+                            value="unidades">
                     </div>
                 </div>
 
@@ -343,12 +351,14 @@
                 <input type="hidden" id="project-id">
                 <div class="form-group">
                     <label for="project-title">Nome do Projeto *</label>
-                    <input type="text" id="project-title" placeholder="Ex: MetasTracker App, Portfólio 2026, SaaS de Vendas" required>
+                    <input type="text" id="project-title"
+                        placeholder="Ex: MetasTracker App, Portfólio 2026, SaaS de Vendas" required>
                 </div>
 
                 <div class="form-group">
                     <label for="project-description">Descrição / Conceito</label>
-                    <textarea id="project-description" rows="3" placeholder="Descreva a ideia do projeto, objetivos e diferencial..."></textarea>
+                    <textarea id="project-description" rows="3"
+                        placeholder="Descreva a ideia do projeto, objetivos e diferencial..."></textarea>
                 </div>
 
                 <div class="form-row-2">
@@ -395,7 +405,8 @@
                 <input type="hidden" id="milestone-id">
                 <div class="form-group">
                     <label for="milestone-title">Título da Meta *</label>
-                    <input type="text" id="milestone-title" placeholder="Ex: Conseguir um Emprego Melhor como Dev, Certificação AWS" required>
+                    <input type="text" id="milestone-title"
+                        placeholder="Ex: Conseguir um Emprego Melhor como Dev, Certificação AWS" required>
                 </div>
 
                 <div class="form-row-2">
@@ -416,7 +427,8 @@
 
                 <div class="form-group">
                     <label for="milestone-notes">Plano de Ação / Anotações Estratégicas</label>
-                    <textarea id="milestone-notes" rows="3" placeholder="O que você precisa fazer para alcançar esta meta? (Ex: Ajustar currículo, aplicar para 50 vagas, treinar entrevistas)"></textarea>
+                    <textarea id="milestone-notes" rows="3"
+                        placeholder="O que você precisa fazer para alcançar esta meta? (Ex: Ajustar currículo, aplicar para 50 vagas, treinar entrevistas)"></textarea>
                 </div>
 
                 <div class="form-group">
@@ -475,4 +487,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>
