@@ -106,6 +106,32 @@ const DEFAULT_STATE = {
             ]
         }
     ],
+    tasks: [
+        {
+            id: 'task-1',
+            title: 'Responder e-mails de recrutadores no LinkedIn',
+            priority: 'high',
+            status: 'todo',
+            tag: 'Carreira',
+            createdAt: getTodayDateString()
+        },
+        {
+            id: 'task-2',
+            title: 'Configurar chave API Gemini no MetasTracker',
+            priority: 'medium',
+            status: 'in-progress',
+            tag: 'Setup',
+            createdAt: getTodayDateString()
+        },
+        {
+            id: 'task-3',
+            title: 'Revisar anotações de estudo de IA',
+            priority: 'low',
+            status: 'done',
+            tag: 'Estudo',
+            createdAt: getTodayDateString()
+        }
+    ],
     dailyLog: {
         [getTodayDateString()]: 4
     }
@@ -138,6 +164,9 @@ function loadStateFromLocalStorage() {
         const stored = localStorage.getItem('metas_tracker_state');
         if (stored) {
             const parsed = JSON.parse(stored);
+            if (!Array.isArray(parsed.tasks)) {
+                parsed.tasks = DEFAULT_STATE.tasks ? JSON.parse(JSON.stringify(DEFAULT_STATE.tasks)) : [];
+            }
             // Check day reset for habits
             const today = getTodayDateString();
             if (parsed.lastOpenedDay !== today) {
@@ -207,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initModals();
     initForms();
     initBackupHandlers();
+    initAiAssistant();
 
     renderAllViews();
 });
@@ -262,7 +292,12 @@ function initNavigation() {
 
     document.getElementById('global-add-btn').addEventListener('click', () => {
         const activeTab = document.querySelector('.tab-content.active').id;
-        if (activeTab === 'tab-projects') {
+        if (activeTab === 'tab-tasks') {
+            document.getElementById('form-task').reset();
+            document.getElementById('task-id').value = '';
+            document.getElementById('modal-task-title').textContent = 'Nova Tarefa Diária';
+            openModal('modal-task');
+        } else if (activeTab === 'tab-projects') {
             document.getElementById('form-project').reset();
             document.getElementById('project-id').value = '';
             document.getElementById('subtask-inputs-list').innerHTML = '';
@@ -299,6 +334,7 @@ function switchTab(tabName) {
     const titleMap = {
         dashboard: { title: 'Dashboard', desc: 'Visão geral do seu progresso, hábitos do dia e projetos ativos.' },
         habits: { title: 'Hábitos Diários & Metas Quantitativas', desc: 'Acompanhe metas rotineiras com contadores diários e sequências.' },
+        tasks: { title: 'Quadro de Tarefas Diárias', desc: 'Organize suas tarefas rotineiras em um fluxo Kanban simples e ágil.' },
         projects: { title: 'Quadro de Projetos & Ideias', desc: 'Gerencie ideias do backlog, projetos em produção e subtarefas.' },
         milestones: { title: 'Grandes Metas de Carreira & Vida', desc: 'Planejamento estratégico de longo prazo com passos de ação.' },
         analytics: { title: 'Estatísticas & Análise de Progresso', desc: 'Métricas visuais do seu desempenho nos últimos dias.' }
@@ -317,6 +353,7 @@ function renderAllViews() {
     updateBadgesAndStats();
     renderDashboard();
     renderHabits();
+    renderTasks();
     renderProjects();
     renderMilestones();
     renderAnalytics();
@@ -324,9 +361,14 @@ function renderAllViews() {
 
 function updateBadgesAndStats() {
     const habitsBadge = document.getElementById('habits-badge');
+    const tasksBadge = document.getElementById('tasks-badge');
     const projectsBadge = document.getElementById('projects-badge');
 
     if (habitsBadge) habitsBadge.textContent = state.habits.length;
+    if (tasksBadge) {
+        const pendingTasks = (state.tasks || []).filter(t => t.status !== 'done').length;
+        tasksBadge.textContent = pendingTasks;
+    }
     if (projectsBadge) projectsBadge.textContent = state.projects.length;
 
     // Stat card calculations
@@ -549,6 +591,127 @@ function deleteHabit(habitId) {
         renderAllViews();
         showToast('Hábito removido com sucesso.', 'info');
     }
+}
+
+// 2.5. DAILY TASKS (KANBAN) RENDER & ACTIONS
+function renderTasks() {
+    const colTodo = document.getElementById('col-task-body-todo');
+    const colProgress = document.getElementById('col-task-body-progress');
+    const colDone = document.getElementById('col-task-body-done');
+
+    if (!colTodo || !colProgress || !colDone) return;
+
+    colTodo.innerHTML = '';
+    colProgress.innerHTML = '';
+    colDone.innerHTML = '';
+
+    const searchInput = document.getElementById('task-search');
+    const priorityFilter = document.getElementById('task-filter-priority');
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+    const selectedPriority = priorityFilter ? priorityFilter.value : 'all';
+
+    const counts = { todo: 0, 'in-progress': 0, done: 0 };
+
+    if (!Array.isArray(state.tasks)) state.tasks = [];
+
+    state.tasks.forEach(task => {
+        if (searchTerm && !task.title.toLowerCase().includes(searchTerm) && (!task.tag || !task.tag.toLowerCase().includes(searchTerm))) {
+            return;
+        }
+
+        if (selectedPriority !== 'all' && task.priority !== selectedPriority) {
+            return;
+        }
+
+        counts[task.status] = (counts[task.status] || 0) + 1;
+
+        const card = document.createElement('div');
+        card.className = `task-card ${task.status === 'done' ? 'completed' : ''}`;
+
+        const priorityLabels = {
+            high: '🔥 Alta',
+            medium: '⚡ Média',
+            low: '🌱 Baixa'
+        };
+
+        let moverHtml = '';
+        if (task.status === 'todo') {
+            moverHtml = `<button class="btn btn-secondary btn-sm" onclick="moveTaskStatus('${task.id}', 'in-progress')">Iniciar <i class="fa-solid fa-arrow-right"></i></button>`;
+        } else if (task.status === 'in-progress') {
+            moverHtml = `
+                <button class="btn btn-secondary btn-sm" onclick="moveTaskStatus('${task.id}', 'todo')"><i class="fa-solid fa-arrow-left"></i> A Fazer</button>
+                <button class="btn btn-primary btn-sm" onclick="moveTaskStatus('${task.id}', 'done')">Concluir <i class="fa-solid fa-check"></i></button>
+            `;
+        } else {
+            moverHtml = `<button class="btn btn-secondary btn-sm" onclick="moveTaskStatus('${task.id}', 'todo')"><i class="fa-solid fa-rotate-left"></i> Reabrir</button>`;
+        }
+
+        card.innerHTML = `
+            <div class="task-card-header">
+                <h4>${escapeHtml(task.title)}</h4>
+                <div class="card-actions-menu">
+                    <button class="btn-icon" onclick="openEditTaskModal('${task.id}')" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn-icon" onclick="deleteTask('${task.id}')" title="Excluir"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+            <div class="task-meta-row">
+                <span class="priority-badge priority-${task.priority || 'medium'}">${priorityLabels[task.priority] || '⚡ Média'}</span>
+                ${task.tag ? `<span class="tag-pill">${escapeHtml(task.tag)}</span>` : ''}
+            </div>
+            <div class="card-status-mover">
+                ${moverHtml}
+            </div>
+        `;
+
+        if (task.status === 'todo') colTodo.appendChild(card);
+        else if (task.status === 'in-progress') colProgress.appendChild(card);
+        else if (task.status === 'done') colDone.appendChild(card);
+    });
+
+    const countTodoElem = document.getElementById('count-task-todo');
+    const countProgElem = document.getElementById('count-task-progress');
+    const countDoneElem = document.getElementById('count-task-done');
+
+    if (countTodoElem) countTodoElem.textContent = counts.todo;
+    if (countProgElem) countProgElem.textContent = counts['in-progress'];
+    if (countDoneElem) countDoneElem.textContent = counts.done;
+}
+
+function moveTaskStatus(taskId, newStatus) {
+    const task = state.tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    task.status = newStatus;
+    if (newStatus === 'done') {
+        triggerConfetti();
+        showToast(`Tarefa "${task.title}" concluída! 🎉`, 'success');
+    }
+
+    saveState();
+    renderAllViews();
+}
+
+function deleteTask(taskId) {
+    if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
+        state.tasks = state.tasks.filter(t => t.id !== taskId);
+        saveState();
+        renderAllViews();
+        showToast('Tarefa removida.', 'info');
+    }
+}
+
+function openEditTaskModal(taskId) {
+    const t = state.tasks.find(item => item.id === taskId);
+    if (!t) return;
+
+    document.getElementById('task-id').value = t.id;
+    document.getElementById('task-title').value = t.title;
+    document.getElementById('task-priority').value = t.priority || 'medium';
+    document.getElementById('task-status').value = t.status || 'todo';
+    document.getElementById('task-tag').value = t.tag || '';
+    document.getElementById('modal-task-title').textContent = 'Editar Tarefa Diária';
+
+    openModal('modal-task');
 }
 
 // 3. PROJECTS & IDEAS (KANBAN) RENDER
@@ -876,7 +1039,14 @@ function initModals() {
         openModal('modal-habit');
     });
 
-    document.getElementById('add-project-btn').addEventListener('click', () => {
+    document.getElementById('add-task-btn')?.addEventListener('click', () => {
+        document.getElementById('form-task').reset();
+        document.getElementById('task-id').value = '';
+        document.getElementById('modal-task-title').textContent = 'Nova Tarefa Diária';
+        openModal('modal-task');
+    });
+
+    document.getElementById('add-project-btn')?.addEventListener('click', () => {
         document.getElementById('form-project').reset();
         document.getElementById('project-id').value = '';
         document.getElementById('subtask-inputs-list').innerHTML = '';
@@ -885,7 +1055,7 @@ function initModals() {
         openModal('modal-project');
     });
 
-    document.getElementById('add-milestone-btn').addEventListener('click', () => {
+    document.getElementById('add-milestone-btn')?.addEventListener('click', () => {
         document.getElementById('form-milestone').reset();
         document.getElementById('milestone-id').value = '';
         document.getElementById('milestone-step-inputs-list').innerHTML = '';
@@ -894,8 +1064,8 @@ function initModals() {
         openModal('modal-milestone');
     });
 
-    document.getElementById('add-subtask-input-btn').addEventListener('click', () => addSubtaskInputField());
-    document.getElementById('add-milestone-step-input-btn').addEventListener('click', () => addMilestoneStepInputField());
+    document.getElementById('add-subtask-input-btn')?.addEventListener('click', () => addSubtaskInputField());
+    document.getElementById('add-milestone-step-input-btn')?.addEventListener('click', () => addMilestoneStepInputField());
 }
 
 function openModal(modalId) {
@@ -932,8 +1102,45 @@ function addMilestoneStepInputField(value = '') {
 
 // FORM SUBMISSIONS
 function initForms() {
+    // Task Form
+    document.getElementById('form-task')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const id = document.getElementById('task-id').value;
+        const title = document.getElementById('task-title').value.trim();
+        const priority = document.getElementById('task-priority').value;
+        const status = document.getElementById('task-status').value;
+        const tag = document.getElementById('task-tag').value.trim();
+
+        if (id) {
+            const task = state.tasks.find(t => t.id === id);
+            if (task) {
+                task.title = title;
+                task.priority = priority;
+                task.status = status;
+                task.tag = tag;
+            }
+            showToast('Tarefa atualizada!', 'success');
+        } else {
+            const newTask = {
+                id: 'task-' + Date.now(),
+                title,
+                priority,
+                status,
+                tag,
+                createdAt: getTodayDateString()
+            };
+            if (!Array.isArray(state.tasks)) state.tasks = [];
+            state.tasks.push(newTask);
+            showToast('Tarefa criada com sucesso!', 'success');
+        }
+
+        saveState();
+        closeModal('modal-task');
+        renderAllViews();
+    });
+
     // Habit Form
-    document.getElementById('form-habit').addEventListener('submit', (e) => {
+    document.getElementById('form-habit')?.addEventListener('submit', (e) => {
         e.preventDefault();
         const id = document.getElementById('habit-id').value;
         const title = document.getElementById('habit-title').value.trim();
@@ -974,7 +1181,7 @@ function initForms() {
     });
 
     // Project Form
-    document.getElementById('form-project').addEventListener('submit', (e) => {
+    document.getElementById('form-project')?.addEventListener('submit', (e) => {
         e.preventDefault();
         const id = document.getElementById('project-id').value;
         const title = document.getElementById('project-title').value.trim();
@@ -1003,7 +1210,6 @@ function initForms() {
                 p.description = description;
                 p.status = status;
                 p.tags = tags;
-                // Preserve done state of existing subtasks if matching titles
                 const updatedSubtasks = subtasks.map(s => {
                     const existing = p.subtasks ? p.subtasks.find(ex => ex.title === s.title) : null;
                     return existing ? { ...s, done: existing.done } : s;
@@ -1030,7 +1236,7 @@ function initForms() {
     });
 
     // Milestone Form
-    document.getElementById('form-milestone').addEventListener('submit', (e) => {
+    document.getElementById('form-milestone')?.addEventListener('submit', (e) => {
         e.preventDefault();
         const id = document.getElementById('milestone-id').value;
         const title = document.getElementById('milestone-title').value.trim();
@@ -1084,6 +1290,8 @@ function initForms() {
     });
 
     // Live search input listeners
+    document.getElementById('task-search')?.addEventListener('input', () => renderTasks());
+    document.getElementById('task-filter-priority')?.addEventListener('change', () => renderTasks());
     document.getElementById('habit-search')?.addEventListener('input', () => renderHabits());
     document.getElementById('habit-filter-category')?.addEventListener('change', () => renderHabits());
     document.getElementById('project-search')?.addEventListener('input', () => renderProjects());
@@ -1149,6 +1357,390 @@ function openEditMilestoneModal(milestoneId) {
     openModal('modal-milestone');
 }
 
+// AI ASSISTANT (GOOGLE GEMINI GENERATIVE ENGINE)
+let generatedAiItems = null;
+
+function initAiAssistant() {
+    const savedKey = localStorage.getItem('gemini_api_key') || '';
+    const keyInput = document.getElementById('gemini-api-key-input');
+    if (keyInput && savedKey) {
+        keyInput.value = savedKey;
+    }
+
+    document.getElementById('save-api-key-btn')?.addEventListener('click', () => {
+        const val = document.getElementById('gemini-api-key-input').value.trim();
+        if (val) {
+            localStorage.setItem('gemini_api_key', val);
+            showToast('Chave da API Gemini salva com sucesso!', 'success');
+        } else {
+            localStorage.removeItem('gemini_api_key');
+            showToast('Chave removida.', 'info');
+        }
+    });
+
+    const openAiModal = () => {
+        const prev = document.getElementById('ai-preview-container');
+        if (prev) prev.style.display = 'none';
+        const pInput = document.getElementById('ai-prompt-input');
+        if (pInput) pInput.value = '';
+        openModal('modal-ai-assistant');
+    };
+
+    document.getElementById('ai-assistant-btn')?.addEventListener('click', openAiModal);
+    document.getElementById('ai-header-btn')?.addEventListener('click', openAiModal);
+
+    document.getElementById('ai-generate-btn')?.addEventListener('click', handleAiGeneration);
+    document.getElementById('ai-accept-all-btn')?.addEventListener('click', handleAcceptAiItems);
+}
+
+async function handleAiGeneration() {
+    const promptInput = document.getElementById('ai-prompt-input').value.trim();
+    if (!promptInput) {
+        showToast('Por favor, digite suas rotinas, tarefas ou metas.', 'warning');
+        return;
+    }
+
+    const apiKey = localStorage.getItem('gemini_api_key') || document.getElementById('gemini-api-key-input').value.trim();
+    if (!apiKey) {
+        showToast('Por favor, informe sua chave de API gratuita do Google Gemini.', 'warning');
+        return;
+    }
+
+    const generateBtn = document.getElementById('ai-generate-btn');
+    generateBtn.disabled = true;
+    generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analisando com Gemini...';
+
+    try {
+        const systemInstruction = `You are an AI assistant for MetasTracker.
+Analyze the user's input and extract habits, daily tasks, projects (with subtasks), and long-term milestones.
+Respond ONLY with a valid JSON object matching this schema:
+{
+  "habits": [
+    { "title": "...", "target": 5, "unit": "currículos|minutos|páginas|vezes", "category": "carreira|estudo|saude|produtividade", "icon": "fa-bullseye" }
+  ],
+  "tasks": [
+    { "title": "...", "priority": "high|medium|low", "tag": "Trabalho|Pessoal|..." }
+  ],
+  "projects": [
+    { "title": "...", "description": "...", "tags": ["tag1", "tag2"], "subtasks": ["subtask 1", "subtask 2"] }
+  ],
+  "milestones": [
+    { "title": "...", "category": "carreira|conhecimento|pessoal", "notes": "...", "steps": ["step 1", "step 2"] }
+  ]
+}`;
+
+        // 1. Try to query the models list first to find available models for this specific API key
+        let modelCandidates = ['gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-1.5-flash', 'gemini-1.5-flash-8b', 'gemini-2.0-flash-exp', 'gemini-1.5-pro', 'gemini-pro'];
+        try {
+            const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`);
+            if (listRes.ok) {
+                const listData = await listRes.json();
+                if (Array.isArray(listData.models)) {
+                    const available = listData.models
+                        .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes('generateContent'))
+                        .map(m => m.name.replace('models/', ''));
+                    if (available.length > 0) {
+                        modelCandidates = [...new Set([...available, ...modelCandidates])];
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn('Could not auto-list Gemini models, using default candidates', e);
+        }
+
+        let rawText = null;
+        let lastError = null;
+
+        // 2. Iterate through model candidates until one succeeds
+        for (const model of modelCandidates) {
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [
+                            {
+                                parts: [
+                                    { text: systemInstruction + "\n\nUser Input: " + promptInput }
+                                ]
+                            }
+                        ],
+                        generationConfig: {
+                            responseMimeType: "application/json"
+                        }
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (text) {
+                        rawText = text;
+                        break;
+                    }
+                } else {
+                    const errData = await response.json().catch(() => ({}));
+                    lastError = errData.error?.message || `HTTP ${response.status} ao consultar modelo ${model}`;
+                }
+            } catch (err) {
+                lastError = err.message;
+            }
+        }
+
+        if (!rawText) {
+            throw new Error(lastError || 'Não foi possível gerar conteúdo com os modelos disponíveis para esta chave.');
+        }
+
+        const parsed = extractJsonFromText(rawText);
+        generatedAiItems = parsed;
+        renderAiPreview(parsed);
+
+        showToast('Itens gerados com sucesso! Confira a prévia abaixo.', 'success');
+    } catch (err) {
+        console.error('Gemini error:', err);
+        showToast(`Erro na IA: ${err.message}`, 'error');
+    } finally {
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Cartões com IA';
+    }
+}
+
+function extractJsonFromText(text) {
+    if (!text) throw new Error('A IA não retornou nenhum conteúdo.');
+
+    console.log('AI Response Text:', text);
+
+    // 1. Direct parse
+    try {
+        return JSON.parse(text.trim());
+    } catch (e) {}
+
+    // 2. Remove markdown code block syntax (```json ... ``` or ``` ... ```)
+    const codeMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+    if (codeMatch && codeMatch[1]) {
+        try {
+            return JSON.parse(codeMatch[1].trim());
+        } catch (e) {}
+    }
+
+    // 3. Extract JSON object substring between the first '{' and last '}'
+    const firstBrace = text.indexOf('{');
+    const lastBrace = text.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        let candidate = text.substring(firstBrace, lastBrace + 1);
+        try {
+            return JSON.parse(candidate);
+        } catch (e) {}
+
+        // Fix Python literals, comments & trailing commas
+        candidate = candidate
+            .replace(/:\s*True\b/g, ': true')
+            .replace(/:\s*False\b/g, ': false')
+            .replace(/:\s*None\b/g, ': null')
+            .replace(/,\s*([\]}])/g, '$1')
+            .replace(/\/\/.*$/gm, '');
+
+        try {
+            return JSON.parse(candidate);
+        } catch (e) {}
+
+        // Try fixing unescaped newlines inside quotes
+        try {
+            const fixedNewlines = candidate.replace(/"([^"\\]*(?:\\.[^"\\]*)*)"/g, (m) => m.replace(/\n/g, '\\n'));
+            return JSON.parse(fixedNewlines);
+        } catch (e) {}
+    }
+
+    // 4. Fallback parser if text was formatted in natural language or bullet lists
+    const fallback = parseTextToStructure(text);
+    if (fallback && (fallback.habits.length || fallback.tasks.length || fallback.projects.length || fallback.milestones.length)) {
+        return fallback;
+    }
+
+    throw new Error('Não foi possível interpretar a resposta da IA. Tente digitar uma frase mais direta ou detalhada.');
+}
+
+function parseTextToStructure(text) {
+    const res = { habits: [], tasks: [], projects: [], milestones: [] };
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    
+    let currentSection = 'tasks';
+    lines.forEach(line => {
+        const lower = line.toLowerCase();
+        if (lower.includes('hábito') || lower.includes('habito')) {
+            currentSection = 'habits';
+            return;
+        }
+        if (lower.includes('tarefa')) {
+            currentSection = 'tasks';
+            return;
+        }
+        if (lower.includes('projeto')) {
+            currentSection = 'projects';
+            return;
+        }
+        if (lower.includes('meta')) {
+            currentSection = 'milestones';
+            return;
+        }
+
+        // Clean line from leading dashes/bullets
+        const cleanLine = line.replace(/^[\*\-\d\.\)\s]+/, '').trim();
+        if (!cleanLine || cleanLine.startsWith('{') || cleanLine.startsWith('}')) return;
+
+        if (currentSection === 'habits') {
+            res.habits.push({ title: cleanLine, target: 1, unit: 'vezes', category: 'carreira', icon: 'fa-bullseye' });
+        } else if (currentSection === 'tasks') {
+            res.tasks.push({ title: cleanLine, priority: 'medium', tag: 'Geral' });
+        } else if (currentSection === 'projects') {
+            res.projects.push({ title: cleanLine, description: '', tags: [], subtasks: [] });
+        } else if (currentSection === 'milestones') {
+            res.milestones.push({ title: cleanLine, category: 'carreira', notes: '', steps: [] });
+        }
+    });
+
+    return res;
+}
+
+function renderAiPreview(parsed) {
+    const previewContainer = document.getElementById('ai-preview-container');
+    const previewList = document.getElementById('ai-preview-items-list');
+    if (!previewContainer || !previewList) return;
+
+    previewList.innerHTML = '';
+    let totalItems = 0;
+
+    if (Array.isArray(parsed.habits)) {
+        parsed.habits.forEach(h => {
+            totalItems++;
+            previewList.appendChild(createAiPreviewItem('Hábito Diário', h.title, `${h.target} ${h.unit || 'vezes'} / dia`));
+        });
+    }
+
+    if (Array.isArray(parsed.tasks)) {
+        parsed.tasks.forEach(t => {
+            totalItems++;
+            previewList.appendChild(createAiPreviewItem('Tarefa Diária', t.title, `Prioridade: ${t.priority || 'média'}`));
+        });
+    }
+
+    if (Array.isArray(parsed.projects)) {
+        parsed.projects.forEach(p => {
+            totalItems++;
+            const subCount = p.subtasks ? p.subtasks.length : 0;
+            previewList.appendChild(createAiPreviewItem('Projeto', p.title, `${subCount} subtarefas`));
+        });
+    }
+
+    if (Array.isArray(parsed.milestones)) {
+        parsed.milestones.forEach(m => {
+            totalItems++;
+            const stepsCount = m.steps ? m.steps.length : 0;
+            previewList.appendChild(createAiPreviewItem('Grande Meta', m.title, `${stepsCount} etapas`));
+        });
+    }
+
+    if (totalItems === 0) {
+        previewList.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Nenhum item reconhecido. Tente descrever com mais detalhes.</p>';
+    }
+
+    previewContainer.style.display = 'block';
+}
+
+function createAiPreviewItem(type, title, subtitle) {
+    const div = document.createElement('div');
+    div.className = 'ai-preview-item';
+    div.innerHTML = `
+        <div class="ai-preview-item-info">
+            <span class="ai-preview-type">${escapeHtml(type)}</span>
+            <strong>${escapeHtml(title)}</strong>
+            <span style="font-size: 0.75rem; color: var(--text-secondary);">${escapeHtml(subtitle)}</span>
+        </div>
+        <span style="color: var(--primary); font-size: 1.1rem;"><i class="fa-solid fa-circle-check"></i></span>
+    `;
+    return div;
+}
+
+function handleAcceptAiItems() {
+    if (!generatedAiItems) return;
+
+    let addedCount = 0;
+
+    if (Array.isArray(generatedAiItems.habits)) {
+        generatedAiItems.habits.forEach(h => {
+            state.habits.push({
+                id: 'habit-' + Date.now() + '-' + Math.floor(Math.random()*1000),
+                title: h.title,
+                target: h.target || 1,
+                current: 0,
+                unit: h.unit || 'vezes',
+                category: h.category || 'produtividade',
+                icon: h.icon || 'fa-bullseye',
+                streak: 0,
+                lastCompletedDate: ''
+            });
+            addedCount++;
+        });
+    }
+
+    if (Array.isArray(generatedAiItems.tasks)) {
+        generatedAiItems.tasks.forEach(t => {
+            state.tasks.push({
+                id: 'task-' + Date.now() + '-' + Math.floor(Math.random()*1000),
+                title: t.title,
+                priority: t.priority || 'medium',
+                status: 'todo',
+                tag: t.tag || 'Geral',
+                createdAt: getTodayDateString()
+            });
+            addedCount++;
+        });
+    }
+
+    if (Array.isArray(generatedAiItems.projects)) {
+        generatedAiItems.projects.forEach(p => {
+            const subtasks = Array.isArray(p.subtasks)
+                ? p.subtasks.map((st, i) => ({ id: 'sub-' + Date.now() + '-' + i, title: st, done: false }))
+                : [];
+
+            state.projects.push({
+                id: 'proj-' + Date.now() + '-' + Math.floor(Math.random()*1000),
+                title: p.title,
+                description: p.description || '',
+                status: 'in-progress',
+                tags: Array.isArray(p.tags) ? p.tags : [],
+                subtasks
+            });
+            addedCount++;
+        });
+    }
+
+    if (Array.isArray(generatedAiItems.milestones)) {
+        generatedAiItems.milestones.forEach(m => {
+            const steps = Array.isArray(m.steps)
+                ? m.steps.map((st, i) => ({ id: 'milestone-step-' + Date.now() + '-' + i, title: st, done: false }))
+                : [];
+
+            state.milestones.push({
+                id: 'milestone-' + Date.now() + '-' + Math.floor(Math.random()*1000),
+                title: m.title,
+                targetDate: '',
+                category: m.category || 'carreira',
+                notes: m.notes || '',
+                steps
+            });
+            addedCount++;
+        });
+    }
+
+    saveState();
+    renderAllViews();
+    closeModal('modal-ai-assistant');
+    triggerConfetti();
+    showToast(`${addedCount} novos itens adicionados com sucesso pela IA! 🎉`, 'success');
+}
+
 // BACKUP & RESTORE DATA HANDLERS
 function initBackupHandlers() {
     const backupBtn = document.getElementById('backup-btn');
@@ -1180,6 +1772,7 @@ function initBackupHandlers() {
             try {
                 const parsed = JSON.parse(event.target.result);
                 if (parsed.habits && parsed.projects && parsed.milestones) {
+                    if (!Array.isArray(parsed.tasks)) parsed.tasks = [];
                     state = parsed;
                     saveState();
                     renderAllViews();
@@ -1206,8 +1799,9 @@ function initBackupHandlers() {
     });
 
     document.getElementById('clear-all-btn')?.addEventListener('click', () => {
-        if (confirm('ATENÇÃO: Deseja apagar TODOS os seus hábitos, projetos e metas?')) {
+        if (confirm('ATENÇÃO: Deseja apagar TODOS os seus hábitos, tarefas, projetos e metas?')) {
             state.habits = [];
+            state.tasks = [];
             state.projects = [];
             state.milestones = [];
             state.dailyLog = {};

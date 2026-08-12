@@ -1299,6 +1299,168 @@ input:focus, select:focus, textarea:focus {
 
 .mt-2 { margin-top: 0.5rem; }
 
+/* Task Kanban Card Styles */
+.task-card {
+    background-color: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.task-card:hover {
+    border-color: var(--primary);
+}
+
+.task-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.task-card-header h4 {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.task-card.completed h4 {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+
+.task-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.priority-badge {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: var(--border-width) solid var(--border-color);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.priority-high {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+:root[data-theme="dark"] .priority-high {
+    background-color: #450a0a;
+    color: #fca5a5;
+    border-color: #7f1d1d;
+}
+
+.priority-medium {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+:root[data-theme="dark"] .priority-medium {
+    background-color: #451a03;
+    color: #fcd34d;
+    border-color: #78350f;
+}
+
+.priority-low {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+:root[data-theme="dark"] .priority-low {
+    background-color: #27272a;
+    color: #d1d5db;
+    border-color: #3f3f46;
+}
+
+/* AI Assistant Styles */
+.ai-api-key-banner {
+    background-color: var(--bg-main);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.ai-key-info strong {
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.ai-key-info p {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.2rem;
+}
+
+.ai-key-input-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.ai-key-input-row input {
+    flex: 1;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.85rem;
+    background-color: var(--bg-card);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    outline: none;
+}
+
+.ai-preview-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.ai-preview-item {
+    background-color: var(--bg-main);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ai-preview-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.ai-preview-type {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .app-body {

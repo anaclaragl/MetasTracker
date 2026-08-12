@@ -17,7 +17,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link rel="stylesheet" href="styles.css?v=15">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css?v=16">
 </head>
 
 <body>
@@ -45,6 +46,11 @@
                         <span>Hábitos Diários</span>
                         <span class="badge" id="habits-badge">0</span>
                     </button>
+                    <button class="nav-item" data-tab="tasks">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>Tarefas Diárias</span>
+                        <span class="badge" id="tasks-badge">0</span>
+                    </button>
                     <button class="nav-item" data-tab="projects">
                         <i class="fa-solid fa-kanban"></i>
                         <span>Projetos & Ideias</span>
@@ -61,6 +67,10 @@
                 </nav>
 
                 <div class="sidebar-footer">
+                    <button id="ai-assistant-btn" class="btn-icon-label" title="Criar com IA Grátis">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Assistente IA</span>
+                    </button>
                     <button id="theme-toggle-btn" class="btn-icon-label" title="Alternar Tema">
                         <i class="fa-solid fa-moon"></i>
                         <span id="theme-btn-text">Modo Escuro</span>
@@ -82,6 +92,9 @@
                             ativos.</p>
                     </div>
                     <div class="header-actions">
+                        <button class="btn btn-secondary" id="ai-header-btn" title="Criar itens automaticamente com IA">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Assistente IA
+                        </button>
                         <button class="btn btn-primary" id="global-add-btn">
                             <i class="fa-solid fa-plus"></i> Novo Item
                         </button>
@@ -188,6 +201,63 @@
 
                     <div class="habits-grid" id="habits-cards-container">
                         <!-- Cards render dynamically -->
+                    </div>
+                </section>
+
+                <!-- TAB 2.5: DAILY TASKS (KANBAN BOARD) -->
+                <section id="tab-tasks" class="tab-content">
+                    <div class="section-toolbar">
+                        <div class="search-filter">
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="task-search" placeholder="Buscar tarefa diária...">
+                            </div>
+                            <select id="task-filter-priority">
+                                <option value="all">Todas as Prioridades</option>
+                                <option value="high">🔥 Alta Prioridade</option>
+                                <option value="medium">⚡ Média Prioridade</option>
+                                <option value="low">🌱 Baixa Prioridade</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="add-task-btn">
+                            <i class="fa-solid fa-plus"></i> Nova Tarefa
+                        </button>
+                    </div>
+
+                    <!-- Daily Tasks Kanban Board -->
+                    <div class="kanban-board">
+                        <!-- Column 1: A Fazer -->
+                        <div class="kanban-col" data-status="todo">
+                            <div class="col-header header-todo">
+                                <span class="col-title"><i class="fa-regular fa-clipboard"></i> A Fazer</span>
+                                <span class="col-count" id="count-task-todo">0</span>
+                            </div>
+                            <div class="col-body" id="col-task-body-todo">
+                                <!-- Cards render dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Column 2: Em Andamento -->
+                        <div class="kanban-col" data-status="in-progress">
+                            <div class="col-header header-progress">
+                                <span class="col-title"><i class="fa-solid fa-spinner"></i> Em Andamento</span>
+                                <span class="col-count" id="count-task-progress">0</span>
+                            </div>
+                            <div class="col-body" id="col-task-body-progress">
+                                <!-- Cards render dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Column 3: Concluídas Hoje -->
+                        <div class="kanban-col" data-status="done">
+                            <div class="col-header header-completed">
+                                <span class="col-title"><i class="fa-solid fa-circle-check"></i> Concluídas</span>
+                                <span class="col-count" id="count-task-done">0</span>
+                            </div>
+                            <div class="col-body" id="col-task-body-done">
+                                <!-- Cards render dynamically -->
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -449,6 +519,97 @@
         </div>
     </div>
 
+    <!-- MODAL: ADD / EDIT TASK -->
+    <div class="modal-overlay" id="modal-task">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-task-title">Nova Tarefa Diária</h3>
+                <button class="modal-close" data-close-modal="modal-task">&times;</button>
+            </div>
+            <form id="form-task">
+                <input type="hidden" id="task-id">
+                <div class="form-group">
+                    <label for="task-title">Título da Tarefa *</label>
+                    <input type="text" id="task-title" placeholder="Ex: Enviar relatório mensal, Comprar café, Ligar para cliente" required>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="task-priority">Prioridade</label>
+                        <select id="task-priority">
+                            <option value="high">🔥 Alta Prioridade</option>
+                            <option value="medium" selected>⚡ Média Prioridade</option>
+                            <option value="low">🌱 Baixa Prioridade</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-status">Status Inicial</label>
+                        <select id="task-status">
+                            <option value="todo">📋 A Fazer</option>
+                            <option value="in-progress">⏳ Em Andamento</option>
+                            <option value="done">✅ Concluída</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="task-tag">Categoria / Tag (Opcional)</label>
+                    <input type="text" id="task-tag" placeholder="Ex: Trabalho, Pessoal, Urgente">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" data-close-modal="modal-task">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Tarefa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: AI ASSISTANT (GOOGLE GEMINI) -->
+    <div class="modal-overlay" id="modal-ai-assistant">
+        <div class="modal-card" style="max-width: 620px;">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary);"></i> Assistente de IA Grátis</h3>
+                <button class="modal-close" data-close-modal="modal-ai-assistant">&times;</button>
+            </div>
+            
+            <div class="ai-api-key-banner">
+                <div class="ai-key-info">
+                    <strong><i class="fa-solid fa-key"></i> Chave Gratuita do Google Gemini</strong>
+                    <p>Obtenha gratuitamente em <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: underline;">Google AI Studio</a>. Sua chave é guardada somente no seu navegador.</p>
+                </div>
+                <div class="ai-key-input-row">
+                    <input type="password" id="gemini-api-key-input" placeholder="Cole sua chave API aqui (AIzaSy...)">
+                    <button type="button" class="btn btn-secondary btn-sm" id="save-api-key-btn">Salvar</button>
+                </div>
+            </div>
+
+            <div class="form-group mt-2">
+                <label for="ai-prompt-input">Descreva suas rotinas, tarefas ou metas em linguagem natural:</label>
+                <textarea id="ai-prompt-input" rows="4" placeholder="Ex: Preciso enviar 5 currículos hoje, estudar React 40 min por dia, comprar café no mercado e criar um app de gestão financeira."></textarea>
+            </div>
+
+            <div class="ai-actions-row">
+                <button type="button" class="btn btn-primary" id="ai-generate-btn" style="width: 100%;">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Cartões com IA
+                </button>
+            </div>
+
+            <!-- AI Preview Container -->
+            <div id="ai-preview-container" class="ai-preview-container" style="display: none; margin-top: 1.25rem;">
+                <div class="box-header" style="padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
+                    <h4><i class="fa-solid fa-eye"></i> Prévia dos Itens Gerados</h4>
+                    <button type="button" class="btn btn-primary btn-sm" id="ai-accept-all-btn">
+                        <i class="fa-solid fa-check"></i> Adicionar Tudo ao MetasTracker
+                    </button>
+                </div>
+                <div id="ai-preview-items-list" class="ai-preview-list">
+                    <!-- Dynamically populated preview -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL 4: BACKUP & DATA -->
     <div class="modal-overlay" id="modal-backup">
         <div class="modal-card">
@@ -485,7 +646,7 @@
     <!-- Toast Notification Container -->
     <div id="toast-container" class="toast-container"></div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=4"></script>
 </body>
 
 </html>
