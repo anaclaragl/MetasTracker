@@ -200,17 +200,17 @@ function saveState() {
 function showToast(message, type = 'info') {
     const container = document.getElementById('toast-container');
     if (!container) return;
-    
+
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    
+
     let icon = 'fa-circle-info';
     if (type === 'success') icon = 'fa-circle-check';
     if (type === 'warning') icon = 'fa-triangle-exclamation';
-    
+
     toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
     container.appendChild(toast);
-    
+
     setTimeout(() => {
         toast.style.opacity = '0';
         toast.style.transform = 'translateX(50px)';
@@ -263,7 +263,7 @@ function updateThemeButtonUI() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     const textSpan = document.getElementById('theme-btn-text');
     const iconElem = document.querySelector('#theme-toggle-btn i');
-    
+
     if (isDark) {
         textSpan.textContent = 'Modo Claro';
         iconElem.className = 'fa-solid fa-sun';
@@ -401,7 +401,7 @@ function updateBadgesAndStats() {
     // Progress circle percentage
     const progressText = document.getElementById('dashboard-progress-text');
     const progressCircle = document.getElementById('dashboard-progress-circle');
-    
+
     let totalPercentage = 0;
     if (state.habits.length > 0) {
         let habitPctSum = 0;
@@ -565,7 +565,7 @@ function adjustHabitCount(habitId, delta) {
     habit.current = Math.max(0, habit.current + delta);
 
     const today = getTodayDateString();
-    
+
     // Check if target was reached right now
     if (habit.current >= habit.target && previousCurrent < habit.target) {
         if (habit.lastCompletedDate !== today) {
@@ -816,14 +816,14 @@ function toggleSubtask(projectId, subtaskId) {
     const sub = proj.subtasks.find(s => s.id === subtaskId);
     if (sub) {
         sub.done = !sub.done;
-        
+
         // If all subtasks completed, toast encouragement
         const allDone = proj.subtasks.every(s => s.done);
         if (allDone) {
             triggerConfetti();
             showToast(`Todas as tarefas do projeto "${proj.title}" foram concluídas!`, 'success');
         }
-        
+
         saveState();
         renderAllViews();
     }
@@ -1430,7 +1430,7 @@ Respond ONLY with a valid JSON object matching this schema:
 }`;
 
         // 1. Try to query the models list first to find available models for this specific API key
-        let modelCandidates = ['gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-1.5-flash', 'gemini-1.5-flash-8b', 'gemini-2.0-flash-exp', 'gemini-1.5-pro', 'gemini-pro'];
+        let modelCandidates = ['gemini-3.1-flash-lite'];
         try {
             const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`);
             if (listRes.ok) {
@@ -1439,8 +1439,12 @@ Respond ONLY with a valid JSON object matching this schema:
                     const available = listData.models
                         .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes('generateContent'))
                         .map(m => m.name.replace('models/', ''));
-                    if (available.length > 0) {
-                        modelCandidates = [...new Set([...available, ...modelCandidates])];
+
+                    // Prioritize fast, current models and filter out slow reasoning/Pro/legacy ones
+                    const preferred = ['gemini-3.1-flash-lite'];
+                    const found = preferred.filter(p => available.includes(p));
+                    if (found.length > 0) {
+                        modelCandidates = [...new Set([...found, ...modelCandidates])];
                     }
                 }
             }
@@ -1454,27 +1458,25 @@ Respond ONLY with a valid JSON object matching this schema:
         // 2. Iterate through model candidates until one succeeds
         for (const model of modelCandidates) {
             try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+                const url = 'https://generativelanguage.googleapis.com/v1beta/interactions';
                 const response = await fetch(url, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-goog-api-key': apiKey
+                    },
                     body: JSON.stringify({
-                        contents: [
-                            {
-                                parts: [
-                                    { text: systemInstruction + "\n\nUser Input: " + promptInput }
-                                ]
-                            }
-                        ],
-                        generationConfig: {
-                            responseMimeType: "application/json"
-                        }
+                        model: model,
+                        input: systemInstruction + "\n\nUser Input: " + promptInput,
+                        store: false
                     })
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    const text = data.outputs?.[0]?.text ||
+                        data.steps?.find(s => s.type === "model_output")?.content?.[0]?.text ||
+                        data.steps?.[data.steps.length - 1]?.content?.[0]?.text;
                     if (text) {
                         rawText = text;
                         break;
@@ -1514,14 +1516,14 @@ function extractJsonFromText(text) {
     // 1. Direct parse
     try {
         return JSON.parse(text.trim());
-    } catch (e) {}
+    } catch (e) { }
 
     // 2. Remove markdown code block syntax (```json ... ``` or ``` ... ```)
     const codeMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
     if (codeMatch && codeMatch[1]) {
         try {
             return JSON.parse(codeMatch[1].trim());
-        } catch (e) {}
+        } catch (e) { }
     }
 
     // 3. Extract JSON object substring between the first '{' and last '}'
@@ -1531,7 +1533,7 @@ function extractJsonFromText(text) {
         let candidate = text.substring(firstBrace, lastBrace + 1);
         try {
             return JSON.parse(candidate);
-        } catch (e) {}
+        } catch (e) { }
 
         // Fix Python literals, comments & trailing commas
         candidate = candidate
@@ -1543,13 +1545,13 @@ function extractJsonFromText(text) {
 
         try {
             return JSON.parse(candidate);
-        } catch (e) {}
+        } catch (e) { }
 
         // Try fixing unescaped newlines inside quotes
         try {
             const fixedNewlines = candidate.replace(/"([^"\\]*(?:\\.[^"\\]*)*)"/g, (m) => m.replace(/\n/g, '\\n'));
             return JSON.parse(fixedNewlines);
-        } catch (e) {}
+        } catch (e) { }
     }
 
     // 4. Fallback parser if text was formatted in natural language or bullet lists
@@ -1564,7 +1566,7 @@ function extractJsonFromText(text) {
 function parseTextToStructure(text) {
     const res = { habits: [], tasks: [], projects: [], milestones: [] };
     const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-    
+
     let currentSection = 'tasks';
     lines.forEach(line => {
         const lower = line.toLowerCase();
@@ -1670,7 +1672,7 @@ function handleAcceptAiItems() {
     if (Array.isArray(generatedAiItems.habits)) {
         generatedAiItems.habits.forEach(h => {
             state.habits.push({
-                id: 'habit-' + Date.now() + '-' + Math.floor(Math.random()*1000),
+                id: 'habit-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
                 title: h.title,
                 target: h.target || 1,
                 current: 0,
@@ -1687,7 +1689,7 @@ function handleAcceptAiItems() {
     if (Array.isArray(generatedAiItems.tasks)) {
         generatedAiItems.tasks.forEach(t => {
             state.tasks.push({
-                id: 'task-' + Date.now() + '-' + Math.floor(Math.random()*1000),
+                id: 'task-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
                 title: t.title,
                 priority: t.priority || 'medium',
                 status: 'todo',
@@ -1705,7 +1707,7 @@ function handleAcceptAiItems() {
                 : [];
 
             state.projects.push({
-                id: 'proj-' + Date.now() + '-' + Math.floor(Math.random()*1000),
+                id: 'proj-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
                 title: p.title,
                 description: p.description || '',
                 status: 'in-progress',
@@ -1723,7 +1725,7 @@ function handleAcceptAiItems() {
                 : [];
 
             state.milestones.push({
-                id: 'milestone-' + Date.now() + '-' + Math.floor(Math.random()*1000),
+                id: 'milestone-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
                 title: m.title,
                 targetDate: '',
                 category: m.category || 'carreira',
@@ -1816,7 +1818,7 @@ function initBackupHandlers() {
 // Utility: Escape HTML String to prevent XSS
 function escapeHtml(str) {
     if (!str) return '';
-    return str.replace(/[&<>"']/g, function(m) {
+    return str.replace(/[&<>"']/g, function (m) {
         return {
             '&': '&amp;',
             '<': '&lt;',
