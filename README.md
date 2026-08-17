@@ -1,25 +1,16 @@
-# MetasTracker
+# React + Vite
 
-A serverless, offline-first Single Page Application (SPA) designed to manage and track daily habits, tasks (Kanban), projects, and long-term milestones with a built-in AI assistant.
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
----
+Currently, two official plugins are available:
 
-## 🛠️ Technologies & Tools
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-*   **Structure:** Semantic HTML5.
-*   **Styling:** Vanilla CSS3 (Retro Neo-Brutalist Design System, native variables for light/dark themes, and responsiveness).
-*   **State Logic:** Asynchronous and event-driven JavaScript (ES6+).
-*   **Persistence:** Browser's LocalStorage API (100% client-side storage).
-*   **AI Assistant:** Google Gemini API (Interactions API using the `gemini-3.1-flash-lite` model).
-*   **Icons:** FontAwesome CDN.
-*   **Animations & Effects:** Canvas-Confetti (CDN) and tactile CSS transitions.
+## React Compiler
 
----
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## ⚙️ Technical Concepts & Architecture
+## Expanding the Oxlint configuration
 
-*   **Serverless & Offline-First Architecture:** The application runs entirely within the user's browser, enabling zero infrastructure costs and simplified static hosting.
-*   **State Synchronization:** The global application state is hydrated from `localStorage` on boot and reactively synchronized with each mutation (tasks/habits/milestones CRUD).
-*   **Day Rollover Routine:** Upon detecting a change in date on the user's system, the engine automatically resets daily habit completion counters while preserving and incrementing streak counts.
-*   **Backup & Portability:** Complete import and export of user data via JSON serialization and deserialization files.
-*   **Dynamic Visualizations:** Weekly analytics and category distribution charts are rendered programmatically using HTML and CSS, without relying on heavy external charting library dependencies.
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
