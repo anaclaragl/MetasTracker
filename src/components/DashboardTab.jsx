@@ -34,23 +34,36 @@ export default function DashboardTab({
 
     return (
         <section id="tab-dashboard" className="tab-content active">
-            {/* Metric Cards */}
-            <div className="grid-cards-4">
+            {/* Metric Cards Grid (Adaptive 5 cards) */}
+            <div className="dashboard-metrics-grid">
                 {/* 1. Progress card */}
                 <div className="stat-card" style={{ gap: '1.25rem' }}>
                     <div className="metric-circle">
-                        <svg viewBox="0 0 36 36" className="circular-chart" style={{ width: '50px', height: '50px' }}>
-                            <path className="circle-bg"
-                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <path className="circle" id="dashboard-progress-circle" strokeDasharray={`${overallProgress}, 100`}
-                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <text x="18" y="20.35" className="percentage" id="dashboard-progress-text"
-                                style={{ fontSize: '0.75rem' }}>{overallProgress}%</text>
+                        <svg viewBox="0 0 36 36" className="circular-chart" style={{ width: '52px', height: '52px' }}>
+                            <path
+                                className="circle-bg"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                            <path
+                                className="circle"
+                                id="dashboard-progress-circle"
+                                strokeDasharray={`${overallProgress}, 100`}
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                            <text
+                                x="18"
+                                y="20.35"
+                                className="percentage"
+                                id="dashboard-progress-text"
+                                style={{ fontSize: '0.75rem' }}
+                            >
+                                {overallProgress}%
+                            </text>
                         </svg>
                     </div>
                     <div className="stat-info">
-                        <span className="stat-label">Conclusão Hoje</span>
-                        <h3 style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 500, marginTop: '2px' }}>
+                        <span className="stat-label">Conclusao Hoje</span>
+                        <h3 style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 600, marginTop: '2px' }}>
                             Progresso Geral
                         </h3>
                     </div>
@@ -60,7 +73,7 @@ export default function DashboardTab({
                 <div className="stat-card">
                     <div className="stat-icon icon-emerald"><i className="fa-solid fa-check-double"></i></div>
                     <div className="stat-info">
-                        <span className="stat-label">Hábitos Hoje</span>
+                        <span className="stat-label">Habitos Hoje</span>
                         <h3 id="stat-habits-completed">{completedTodayCount} / {habitsCount}</h3>
                     </div>
                 </div>
@@ -69,7 +82,7 @@ export default function DashboardTab({
                 <div className="stat-card">
                     <div className="stat-icon icon-amber"><i className="fa-solid fa-fire"></i></div>
                     <div className="stat-info">
-                        <span className="stat-label">Maior Sequência</span>
+                        <span className="stat-label">Maior Sequencia</span>
                         <h3 id="stat-best-streak">{maxStreak} {maxStreak === 1 ? 'dia' : 'dias'}</h3>
                     </div>
                 </div>
@@ -98,14 +111,19 @@ export default function DashboardTab({
                 {/* Left: Today's Habit Quick List */}
                 <div className="content-box">
                     <div className="box-header">
-                        <h3><i className="fa-solid fa-list-check icon-primary"></i> Hábitos Prioritários Hoje</h3>
-                        <button className="btn-text" onClick={() => onSwitchTab('habits')}>
+                        <h3><i className="fa-solid fa-list-check icon-primary"></i> Habitos Prioritarios Hoje</h3>
+                        <button type="button" className="btn-text" onClick={() => onSwitchTab('habits')}>
                             Ver Todos <i className="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
                     <div id="dashboard-habits-list" className="items-list">
                         {priorityHabits.length === 0 ? (
-                            <p className="text-muted">Nenhum hábito cadastrado ainda. Clique em "Criar Hábito" para começar.</p>
+                            <div className="empty-sub-state">
+                                <p className="text-muted">Nenhum habito cadastrado ainda.</p>
+                                <button type="button" className="btn btn-secondary btn-sm mt-2" onClick={() => onSwitchTab('habits')}>
+                                    <i className="fa-solid fa-plus"></i> Cadastrar Habito
+                                </button>
+                            </div>
                         ) : (
                             priorityHabits.map(habit => {
                                 const isDone = habit.current >= habit.target;
@@ -118,20 +136,39 @@ export default function DashboardTab({
                                             <div>
                                                 <strong style={{ fontSize: '0.9rem' }}>{habit.title}</strong>
                                                 <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                                                    {habit.current} de {habit.target} {habit.unit}
+                                                    {habit.current} / {habit.target} {habit.unit}
+                                                    {habit.streak > 0 && ` • ${habit.streak} dias seguidos`}
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                             <div className="counter-controls">
-                                                <button className="btn-counter" onClick={() => onAdjustHabit(habit.id, -1)}>-</button>
-                                                <button className="btn-counter" onClick={() => onAdjustHabit(habit.id, 1)}>+</button>
+                                                <button
+                                                    type="button"
+                                                    className="btn-counter"
+                                                    onClick={() => onAdjustHabit(habit.id, -1)}
+                                                    aria-label={`Diminuir ${habit.title}`}
+                                                >
+                                                    -
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="btn-counter"
+                                                    onClick={() => onAdjustHabit(habit.id, 1)}
+                                                    aria-label={`Aumentar ${habit.title}`}
+                                                >
+                                                    +
+                                                </button>
                                             </div>
-                                            <button className="btn-icon" onClick={() => onEditHabit(habit)} title="Editar" style={{ color: 'var(--text-muted)' }}>
+                                            <button
+                                                type="button"
+                                                className="btn-icon"
+                                                onClick={() => onEditHabit(habit)}
+                                                aria-label={`Editar ${habit.title}`}
+                                                title="Editar"
+                                            >
                                                 <i className="fa-solid fa-pen"></i>
-                                            </button>
-                                            <button className="btn-icon" onClick={() => onDeleteHabit(habit.id)} title="Excluir" style={{ color: 'var(--text-muted)' }}>
-                                                <i className="fa-solid fa-trash"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -141,17 +178,22 @@ export default function DashboardTab({
                     </div>
                 </div>
 
-                {/* Right: Active Projects & Focus */}
+                {/* Right: Featured Projects in Progress */}
                 <div className="content-box">
                     <div className="box-header">
-                        <h3><i className="fa-solid fa-laptop-code icon-primary"></i> Projetos em Destaque</h3>
-                        <button className="btn-text" onClick={() => onSwitchTab('projects')}>
-                            Ver Quadro <i className="fa-solid fa-arrow-right"></i>
+                        <h3><i className="fa-solid fa-diagram-project icon-primary"></i> Projetos em Producao</h3>
+                        <button type="button" className="btn-text" onClick={() => onSwitchTab('projects')}>
+                            Ver Todos <i className="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
                     <div id="dashboard-projects-list" className="items-list">
                         {featuredProjects.length === 0 ? (
-                            <p className="text-muted">Nenhum projeto em produção no momento. Adicione um na aba Projetos.</p>
+                            <div className="empty-sub-state">
+                                <p className="text-muted">Nenhum projeto em producao no momento.</p>
+                                <button type="button" className="btn btn-secondary btn-sm mt-2" onClick={() => onSwitchTab('projects')}>
+                                    <i className="fa-solid fa-plus"></i> Iniciar Novo Projeto
+                                </button>
+                            </div>
                         ) : (
                             featuredProjects.map(proj => {
                                 const totalSub = proj.subtasks ? proj.subtasks.length : 0;
@@ -159,16 +201,21 @@ export default function DashboardTab({
                                 const pct = totalSub > 0 ? Math.round((doneSub / totalSub) * 100) : 0;
 
                                 return (
-                                    <div key={proj.id} className="list-item-card">
-                                        <div>
+                                    <div key={proj.id} className="list-item-card" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '0.65rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <strong style={{ fontSize: '0.9rem' }}>{proj.title}</strong>
-                                            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                                                {doneSub} de {totalSub} tarefas concluídas ({pct}%)
-                                            </div>
+                                            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
+                                                {doneSub}/{totalSub} subtarefas ({pct}%)
+                                            </span>
                                         </div>
-                                        <button className="btn-text" onClick={() => onSwitchTab('projects')}>
-                                            Abrir <i className="fa-solid fa-chevron-right"></i>
-                                        </button>
+                                        {proj.description && (
+                                            <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                {proj.description}
+                                            </p>
+                                        )}
+                                        <div className="progress-track" style={{ height: '6px' }}>
+                                            <div className="progress-fill" style={{ width: `${pct}%` }}></div>
+                                        </div>
                                     </div>
                                 );
                             })

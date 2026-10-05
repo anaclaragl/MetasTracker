@@ -24,33 +24,41 @@ export default function HabitsTab({
                         <i className="fa-solid fa-magnifying-glass"></i>
                         <input
                             type="text"
-                            placeholder="Buscar hábito..."
+                            placeholder="Buscar habito..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
+                            aria-label="Buscar habito"
                         />
                     </div>
                     <select
                         id="habit-filter-category"
                         value={categoryFilter}
                         onChange={(e) => setCategoryFilter(e.target.value)}
+                        aria-label="Filtrar por categoria"
                     >
                         <option value="all">Todas as Categorias</option>
                         <option value="carreira">Carreira / Emprego</option>
                         <option value="estudo">Estudo & Aprendizado</option>
-                        <option value="saude">Saúde & Bem-Estar</option>
+                        <option value="saude">Saude & Bem-Estar</option>
                         <option value="produtividade">Produtividade</option>
                     </select>
                 </div>
                 <button className="btn btn-primary" onClick={onAddHabitBtnClick}>
-                    <i className="fa-solid fa-plus"></i> Criar Hábito
+                    <i className="fa-solid fa-plus"></i> Criar Habito
                 </button>
             </div>
 
             <div className="habits-grid" id="habits-cards-container">
                 {filteredHabits.length === 0 ? (
-                    <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
-                        <i className="fa-solid fa-fire-burner" style={{ fontSize: '2.5rem', marginBottom: '1rem' }}></i>
-                        <p>Nenhum hábito encontrado com esses filtros.</p>
+                    <div className="empty-state-box">
+                        <div className="empty-state-icon">
+                            <i className="fa-solid fa-fire-burner"></i>
+                        </div>
+                        <h4>Nenhum habito encontrado</h4>
+                        <p>Ajuste os filtros de busca ou comece criando seu primeiro habito diario agora mesmo.</p>
+                        <button className="btn btn-primary btn-sm" onClick={onAddHabitBtnClick}>
+                            <i className="fa-solid fa-plus"></i> Criar Novo Habito
+                        </button>
                     </div>
                 ) : (
                     filteredHabits.map(habit => {
@@ -72,10 +80,22 @@ export default function HabitsTab({
                                         </div>
                                     </div>
                                     <div className="card-actions-menu">
-                                        <button className="btn-icon" onClick={() => onEditHabit(habit)} title="Editar">
+                                        <button
+                                            type="button"
+                                            className="btn-icon"
+                                            onClick={() => onEditHabit(habit)}
+                                            aria-label={`Editar habito ${habit.title}`}
+                                            title="Editar"
+                                        >
                                             <i className="fa-solid fa-pen"></i>
                                         </button>
-                                        <button className="btn-icon" onClick={() => onDeleteHabit(habit.id)} title="Excluir">
+                                        <button
+                                            type="button"
+                                            className="btn-icon"
+                                            onClick={() => onDeleteHabit(habit.id)}
+                                            aria-label={`Excluir habito ${habit.title}`}
+                                            title="Excluir"
+                                        >
                                             <i className="fa-solid fa-trash"></i>
                                         </button>
                                     </div>
@@ -86,8 +106,8 @@ export default function HabitsTab({
                                         <div className="counter-text">
                                             {habit.current} <span>/ {habit.target} {habit.unit}</span>
                                         </div>
-                                        <span style={{ fontSize: '0.85rem', fontWeight: 700, color: isCompleted ? 'var(--emerald)' : 'var(--text-secondary)' }}>
-                                            {isCompleted ? '✓ Meta Concluída' : `${pct}%`}
+                                        <span style={{ fontSize: '0.85rem', fontWeight: 700, color: isCompleted ? 'var(--accent-green)' : 'var(--text-secondary)' }}>
+                                            {isCompleted ? 'Meta Concluida' : `${pct}%`}
                                         </span>
                                     </div>
                                     <div className="progress-track">
@@ -96,13 +116,27 @@ export default function HabitsTab({
                                 </div>
 
                                 <div className="habit-footer">
-                                    <div className="streak-badge" title="Dias seguidos completando este hábito">
+                                    <div className="streak-badge" title="Dias seguidos completando este habito">
                                         <i className="fa-solid fa-fire"></i>
-                                        <span>{habit.streak || 0} dias em sequência</span>
+                                        <span>{habit.streak || 0} {habit.streak === 1 ? 'dia' : 'dias'} em sequencia</span>
                                     </div>
                                     <div className="counter-controls">
-                                        <button className="btn-counter" onClick={() => onAdjustHabit(habit.id, -1)}>-</button>
-                                        <button className="btn-counter" onClick={() => onAdjustHabit(habit.id, 1)}>+</button>
+                                        <button
+                                            type="button"
+                                            className="btn-counter"
+                                            onClick={() => onAdjustHabit(habit.id, -1)}
+                                            aria-label={`Diminuir contador de ${habit.title}`}
+                                        >
+                                            -
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="btn-counter"
+                                            onClick={() => onAdjustHabit(habit.id, 1)}
+                                            aria-label={`Aumentar contador de ${habit.title}`}
+                                        >
+                                            +
+                                        </button>
                                     </div>
                                 </div>
                             </div>

@@ -11,9 +11,9 @@ export default function TasksTab({
     const [searchTerm, setSearchTerm] = useState('');
 
     const priorityLabels = {
-        high: '🔥 Alta',
-        medium: '⚡ Média',
-        low: '🌱 Baixa'
+        high: 'Alta Prioridade',
+        medium: 'Media Prioridade',
+        low: 'Baixa Prioridade'
     };
 
     const tasks = state.tasks || [];
@@ -40,17 +40,19 @@ export default function TasksTab({
                             placeholder="Buscar tarefa ou tag..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
+                            aria-label="Buscar tarefa ou tag"
                         />
                     </div>
                     <select
                         id="task-filter-priority"
                         value={priorityFilter}
                         onChange={(e) => setPriorityFilter(e.target.value)}
+                        aria-label="Filtrar por prioridade"
                     >
                         <option value="all">Todas as Prioridades</option>
-                        <option value="high">🔥 Alta Prioridade</option>
-                        <option value="medium">⚡ Média Prioridade</option>
-                        <option value="low">🌱 Baixa Prioridade</option>
+                        <option value="high">Alta Prioridade</option>
+                        <option value="medium">Media Prioridade</option>
+                        <option value="low">Baixa Prioridade</option>
                     </select>
                 </div>
                 <button className="btn btn-primary" onClick={onAddTaskBtnClick}>
@@ -59,118 +61,195 @@ export default function TasksTab({
             </div>
 
             {/* Daily Tasks Kanban Board */}
-            <div className="kanban-board">
-                {/* Column 1: A Fazer */}
-                <div className="kanban-col">
-                    <div className="col-header header-todo">
-                        <span className="col-title"><i className="fa-regular fa-clipboard"></i> A Fazer</span>
-                        <span className="col-count">{todoTasks.length}</span>
+            {filteredTasks.length === 0 ? (
+                <div className="empty-state-box">
+                    <div className="empty-state-icon">
+                        <i className="fa-solid fa-clipboard-list"></i>
                     </div>
-                    <div className="col-body">
-                        {todoTasks.map(task => (
-                            <div key={task.id} className="task-card">
-                                <div className="task-card-header">
-                                    <h4>{task.title}</h4>
-                                    <div className="card-actions-menu">
-                                        <button className="btn-icon" onClick={() => onEditTask(task)} title="Editar">
-                                            <i className="fa-solid fa-pen"></i>
-                                        </button>
-                                        <button className="btn-icon" onClick={() => onDeleteTask(task.id)} title="Excluir">
-                                            <i className="fa-solid fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="task-meta-row">
-                                    <span className={`priority-badge priority-${task.priority || 'medium'}`}>
-                                        {priorityLabels[task.priority] || '⚡ Média'}
-                                    </span>
-                                    {task.tag && <span className="tag-pill">{task.tag}</span>}
-                                </div>
-                                <div className="card-status-mover">
-                                    <button className="btn btn-secondary btn-sm" onClick={() => onMoveTask(task.id, 'in-progress')}>
-                                        Iniciar <i className="fa-solid fa-arrow-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    <h4>Nenhuma tarefa encontrada</h4>
+                    <p>Adicione novas tarefas para organizar sua rotina no quadro Kanban.</p>
+                    <button className="btn btn-primary btn-sm" onClick={onAddTaskBtnClick}>
+                        <i className="fa-solid fa-plus"></i> Criar Nova Tarefa
+                    </button>
                 </div>
+            ) : (
+                <div className="kanban-board">
+                    {/* Column 1: A Fazer */}
+                    <div className="kanban-col">
+                        <div className="col-header header-todo">
+                            <span className="col-title"><i className="fa-regular fa-clipboard"></i> A Fazer</span>
+                            <span className="col-count">{todoTasks.length}</span>
+                        </div>
+                        <div className="col-body">
+                            {todoTasks.length === 0 ? (
+                                <p className="col-empty-msg">Nenhuma tarefa a fazer</p>
+                            ) : (
+                                todoTasks.map(task => (
+                                    <div key={task.id} className="task-card">
+                                        <div className="task-card-header">
+                                            <h4>{task.title}</h4>
+                                            <div className="card-actions-menu">
+                                                <button
+                                                    type="button"
+                                                    className="btn-icon"
+                                                    onClick={() => onEditTask(task)}
+                                                    aria-label={`Editar tarefa ${task.title}`}
+                                                    title="Editar"
+                                                >
+                                                    <i className="fa-solid fa-pen"></i>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="btn-icon"
+                                                    onClick={() => onDeleteTask(task.id)}
+                                                    aria-label={`Excluir tarefa ${task.title}`}
+                                                    title="Excluir"
+                                                >
+                                                    <i className="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div className="task-meta-row">
+                                            <span className={`priority-badge priority-${task.priority || 'medium'}`}>
+                                                {priorityLabels[task.priority] || 'Media'}
+                                            </span>
+                                            {task.tag && <span className="tag-pill">{task.tag}</span>}
+                                        </div>
+                                        <div className="card-status-mover">
+                                            <button
+                                                type="button"
+                                                className="btn btn-secondary btn-sm"
+                                                onClick={() => onMoveTask(task.id, 'in-progress')}
+                                            >
+                                                Iniciar <i className="fa-solid fa-arrow-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </div>
 
-                {/* Column 2: Em Andamento */}
-                <div className="kanban-col">
-                    <div className="col-header header-progress">
-                        <span className="col-title"><i className="fa-solid fa-spinner"></i> Em Andamento</span>
-                        <span className="col-count">{inProgressTasks.length}</span>
-                    </div>
-                    <div className="col-body">
-                        {inProgressTasks.map(task => (
-                            <div key={task.id} className="task-card">
-                                <div className="task-card-header">
-                                    <h4>{task.title}</h4>
-                                    <div className="card-actions-menu">
-                                        <button className="btn-icon" onClick={() => onEditTask(task)} title="Editar">
-                                            <i className="fa-solid fa-pen"></i>
-                                        </button>
-                                        <button className="btn-icon" onClick={() => onDeleteTask(task.id)} title="Excluir">
-                                            <i className="fa-solid fa-trash"></i>
-                                        </button>
+                    {/* Column 2: Em Andamento */}
+                    <div className="kanban-col">
+                        <div className="col-header header-progress">
+                            <span className="col-title"><i className="fa-solid fa-spinner"></i> Em Andamento</span>
+                            <span className="col-count">{inProgressTasks.length}</span>
+                        </div>
+                        <div className="col-body">
+                            {inProgressTasks.length === 0 ? (
+                                <p className="col-empty-msg">Nenhuma tarefa em andamento</p>
+                            ) : (
+                                inProgressTasks.map(task => (
+                                    <div key={task.id} className="task-card">
+                                        <div className="task-card-header">
+                                            <h4>{task.title}</h4>
+                                            <div className="card-actions-menu">
+                                                <button
+                                                    type="button"
+                                                    className="btn-icon"
+                                                    onClick={() => onEditTask(task)}
+                                                    aria-label={`Editar tarefa ${task.title}`}
+                                                    title="Editar"
+                                                >
+                                                    <i className="fa-solid fa-pen"></i>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="btn-icon"
+                                                    onClick={() => onDeleteTask(task.id)}
+                                                    aria-label={`Excluir tarefa ${task.title}`}
+                                                    title="Excluir"
+                                                >
+                                                    <i className="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div className="task-meta-row">
+                                            <span className={`priority-badge priority-${task.priority || 'medium'}`}>
+                                                {priorityLabels[task.priority] || 'Media'}
+                                            </span>
+                                            {task.tag && <span className="tag-pill">{task.tag}</span>}
+                                        </div>
+                                        <div className="card-status-mover">
+                                            <button
+                                                type="button"
+                                                className="btn btn-secondary btn-sm"
+                                                onClick={() => onMoveTask(task.id, 'todo')}
+                                            >
+                                                <i className="fa-solid fa-arrow-left"></i> A Fazer
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary btn-sm"
+                                                onClick={() => onMoveTask(task.id, 'done')}
+                                            >
+                                                Concluir <i className="fa-solid fa-check"></i>
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="task-meta-row">
-                                    <span className={`priority-badge priority-${task.priority || 'medium'}`}>
-                                        {priorityLabels[task.priority] || '⚡ Média'}
-                                    </span>
-                                    {task.tag && <span className="tag-pill">{task.tag}</span>}
-                                </div>
-                                <div className="card-status-mover">
-                                    <button className="btn btn-secondary btn-sm" onClick={() => onMoveTask(task.id, 'todo')}>
-                                        <i className="fa-solid fa-arrow-left"></i> A Fazer
-                                    </button>
-                                    <button className="btn className btn-primary btn-sm" onClick={() => onMoveTask(task.id, 'done')}>
-                                        Concluir <i className="fa-solid fa-check"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
+                                ))
+                            )}
+                        </div>
                     </div>
-                </div>
 
-                {/* Column 3: Concluídas */}
-                <div className="kanban-col">
-                    <div className="col-header header-completed">
-                        <span className="col-title"><i className="fa-solid fa-circle-check"></i> Concluídas</span>
-                        <span className="col-count">{doneTasks.length}</span>
-                    </div>
-                    <div className="col-body">
-                        {doneTasks.map(task => (
-                            <div key={task.id} className="task-card completed">
-                                <div className="task-card-header">
-                                    <h4>{task.title}</h4>
-                                    <div className="card-actions-menu">
-                                        <button className="btn-icon" onClick={() => onEditTask(task)} title="Editar">
-                                            <i className="fa-solid fa-pen"></i>
-                                        </button>
-                                        <button className="btn-icon" onClick={() => onDeleteTask(task.id)} title="Excluir">
-                                            <i className="fa-solid fa-trash"></i>
-                                        </button>
+                    {/* Column 3: Concluidas */}
+                    <div className="kanban-col">
+                        <div className="col-header header-completed">
+                            <span className="col-title"><i className="fa-solid fa-circle-check"></i> Concluidas</span>
+                            <span className="col-count">{doneTasks.length}</span>
+                        </div>
+                        <div className="col-body">
+                            {doneTasks.length === 0 ? (
+                                <p className="col-empty-msg">Nenhuma tarefa concluida hoje</p>
+                            ) : (
+                                doneTasks.map(task => (
+                                    <div key={task.id} className="task-card completed">
+                                        <div className="task-card-header">
+                                            <h4>{task.title}</h4>
+                                            <div className="card-actions-menu">
+                                                <button
+                                                    type="button"
+                                                    className="btn-icon"
+                                                    onClick={() => onEditTask(task)}
+                                                    aria-label={`Editar tarefa ${task.title}`}
+                                                    title="Editar"
+                                                >
+                                                    <i className="fa-solid fa-pen"></i>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="btn-icon"
+                                                    onClick={() => onDeleteTask(task.id)}
+                                                    aria-label={`Excluir tarefa ${task.title}`}
+                                                    title="Excluir"
+                                                >
+                                                    <i className="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div className="task-meta-row">
+                                            <span className={`priority-badge priority-${task.priority || 'medium'}`}>
+                                                {priorityLabels[task.priority] || 'Media'}
+                                            </span>
+                                            {task.tag && <span className="tag-pill">{task.tag}</span>}
+                                        </div>
+                                        <div className="card-status-mover">
+                                            <button
+                                                type="button"
+                                                className="btn btn-secondary btn-sm"
+                                                onClick={() => onMoveTask(task.id, 'todo')}
+                                            >
+                                                <i className="fa-solid fa-rotate-left"></i> Reabrir
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="task-meta-row">
-                                    <span className={`priority-badge priority-${task.priority || 'medium'}`}>
-                                        {priorityLabels[task.priority] || '⚡ Média'}
-                                    </span>
-                                    {task.tag && <span className="tag-pill">{task.tag}</span>}
-                                </div>
-                                <div className="card-status-mover">
-                                    <button className="btn btn-secondary btn-sm" onClick={() => onMoveTask(task.id, 'todo')}>
-                                        <i className="fa-solid fa-rotate-left"></i> Reabrir
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
+                                ))
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
         </section>
     );
 }
