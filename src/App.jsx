@@ -256,7 +256,7 @@ export default function App() {
                 <main className="main-content">
                     {/* Top Header */}
                     <header className="top-header">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', width: '100%' }}>
+                        <div className="header-left">
                             <button
                                 type="button"
                                 className="mobile-menu-toggle"

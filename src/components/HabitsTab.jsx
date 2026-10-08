@@ -20,7 +20,7 @@ export default function HabitsTab({
         <section id="tab-habits" className="tab-content active">
             <div className="section-toolbar">
                 <div className="search-filter">
-                    <div className="input-with-icon" style={{ marginRight: '1rem' }}>
+                    <div className="input-with-icon">
                         <i className="fa-solid fa-magnifying-glass"></i>
                         <input
                             type="text"
