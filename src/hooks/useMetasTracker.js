@@ -9,10 +9,10 @@ const DEFAULT_STATE = {
     habits: [
         {
             id: 'habit-1',
-            title: 'Mandar Curriculos',
+            title: 'Send Resumes',
             target: 5,
             current: 2,
-            unit: 'curriculos',
+            unit: 'resumes',
             category: 'carreira',
             icon: 'fa-file-lines',
             streak: 4,
@@ -20,10 +20,10 @@ const DEFAULT_STATE = {
         },
         {
             id: 'habit-2',
-            title: 'Estudar Programacao / IA',
+            title: 'Study Programming / AI',
             target: 60,
             current: 60,
-            unit: 'minutos',
+            unit: 'minutes',
             category: 'estudo',
             icon: 'fa-laptop-code',
             streak: 7,
@@ -31,10 +31,10 @@ const DEFAULT_STATE = {
         },
         {
             id: 'habit-3',
-            title: 'Exercicio Fisico',
+            title: 'Physical Exercise',
             target: 30,
             current: 0,
-            unit: 'minutos',
+            unit: 'minutes',
             category: 'saude',
             icon: 'fa-dumbbell',
             streak: 2,
@@ -45,78 +45,78 @@ const DEFAULT_STATE = {
         {
             id: 'proj-1',
             title: 'MetasTracker WebApp',
-            description: 'Plataforma completa para gerenciar rotinas diarias, ideias de softwares e grandes objetivos de carreira.',
+            description: 'Modern productivity dashboard to manage daily routines, software concepts, and career milestones.',
             status: 'in-progress',
             tags: ['HTML5', 'CSS3', 'JavaScript'],
             subtasks: [
-                { id: 'sub-1', title: 'Criar estrutura e layout responsivo', done: true },
-                { id: 'sub-2', title: 'Implementar salvamento no LocalStorage', done: true },
-                { id: 'sub-3', title: 'Adicionar quadro Kanban interativo', done: true },
-                { id: 'sub-4', title: 'Incluir graficos de desempenho semanal', done: false }
+                { id: 'sub-1', title: 'Build responsive layout and design', done: true },
+                { id: 'sub-2', title: 'Implement LocalStorage state persistence', done: true },
+                { id: 'sub-3', title: 'Add interactive Kanban workflows', done: true },
+                { id: 'sub-4', title: 'Incorporate weekly performance analytics', done: false }
             ]
         },
         {
             id: 'proj-2',
-            title: 'Novo Portfolio 2026',
-            description: 'Site pessoal de alta estetica destacando principais projetos e casos de sucesso.',
+            title: 'Portfolio Redesign 2026',
+            description: 'Clean engineering portfolio showcasing production projects, architecture case studies, and achievements.',
             status: 'idea',
-            tags: ['UX/UI', 'Portfolio', 'Fullstack'],
+            tags: ['React', 'UI/UX', 'Fullstack'],
             subtasks: [
-                { id: 'sub-201', title: 'Desenhar prototipo no Figma', done: false },
-                { id: 'sub-202', title: 'Escrever textos e descricoes dos projetos', done: false }
+                { id: 'sub-201', title: 'Create Figma design mockup', done: false },
+                { id: 'sub-202', title: 'Draft project descriptions and architecture docs', done: false }
             ]
         },
         {
             id: 'proj-3',
-            title: 'Automacao de Tarefas em Python',
-            description: 'Script para envio de relatorios e busca de oportunidades de emprego.',
+            title: 'Python Job Search Automation',
+            description: 'Automated background script for tracking relevant software engineering roles.',
             status: 'completed',
-            tags: ['Python', 'Automacao'],
+            tags: ['Python', 'Automation'],
             subtasks: [
-                { id: 'sub-301', title: 'Escrever rotina de scraping', done: true },
-                { id: 'sub-302', title: 'Integrar com envio de e-mails', done: true }
+                { id: 'sub-301', title: 'Build scraping and filtering pipeline', done: true },
+                { id: 'sub-302', title: 'Connect automated email notifications', done: true }
             ]
         }
     ],
     milestones: [
         {
             id: 'milestone-1',
-            title: 'Conseguir um Emprego Melhor em Tecnologia',
+            title: 'Land a Senior Software Engineering Role',
             targetDate: '2026-11-30',
             category: 'carreira',
-            notes: 'Focar em vagas que paguem melhor, permitam trabalho remoto e aprendizado continuo.',
+            notes: 'Target high-impact remote roles with strong engineering culture and continuous learning.',
             steps: [
-                { id: 'step-1', title: 'Atualizar perfil do LinkedIn e Curriculo', done: true },
-                { id: 'step-2', title: 'Mandar 5 curriculos personalizados por dia', done: true },
-                { id: 'step-3', title: 'Desenvolver e lancar 2 projetos no GitHub', done: false },
-                { id: 'step-4', title: 'Treinar 20 perguntas de entrevista tecnica', done: false }
+                { id: 'step-1', title: 'Optimize LinkedIn profile and technical resume', done: true },
+                { id: 'step-2', title: 'Submit 5 tailored applications daily', done: true },
+                { id: 'step-3', title: 'Publish 2 open-source showcase repositories', done: false },
+                { id: 'step-4', title: 'Practice 20 core system design and coding questions', done: false }
             ]
         },
         {
             id: 'milestone-2',
-            title: 'Obter Certificacao Profissional Cloud / DevOps',
+            title: 'Earn Professional Cloud / DevOps Certification',
             targetDate: '2026-12-15',
             category: 'conhecimento',
-            notes: 'Estudar 1 hora diaria para dominar os conceitos fundamentais e simulados.',
+            notes: 'Study 1 hour every day to master cloud architecture fundamentals and mock exams.',
             steps: [
-                { id: 'step-201', title: 'Concluir curso preparatorio online', done: true },
-                { id: 'step-202', title: 'Realizar 3 simulados com pontuacao > 80%', done: false },
-                { id: 'step-203', title: 'Agendar e realizar exame oficial', done: false }
+                { id: 'step-201', title: 'Complete comprehensive online prep course', done: true },
+                { id: 'step-202', title: 'Pass 3 practice exams with score above 80%', done: false },
+                { id: 'step-203', title: 'Schedule and sit for official certification exam', done: false }
             ]
         }
     ],
     tasks: [
         {
             id: 'task-1',
-            title: 'Responder e-mails de recrutadores no LinkedIn',
+            title: 'Respond to recruiter inquiries on LinkedIn',
             priority: 'high',
             status: 'todo',
-            tag: 'Carreira',
+            tag: 'Career',
             createdAt: getTodayDateString()
         },
         {
             id: 'task-2',
-            title: 'Configurar chave API Gemini no MetasTracker',
+            title: 'Configure Gemini API key in MetasTracker',
             priority: 'medium',
             status: 'in-progress',
             tag: 'Setup',
@@ -124,10 +124,10 @@ const DEFAULT_STATE = {
         },
         {
             id: 'task-3',
-            title: 'Revisar anotacoes de estudo de IA',
+            title: 'Review AI system architecture study notes',
             priority: 'low',
             status: 'done',
-            tag: 'Estudo',
+            tag: 'Study',
             createdAt: getTodayDateString()
         }
     ],
@@ -155,6 +155,68 @@ export function useMetasTracker() {
                     });
                     parsed.lastOpenedDay = today;
                 }
+
+                // If existing stored data still has Portuguese seed items, update them cleanly to English
+                if (parsed.habits.some(h => h.title === 'Mandar Curriculos')) {
+                    parsed.habits = parsed.habits.map(h => {
+                        if (h.title === 'Mandar Curriculos') return { ...h, title: 'Send Resumes', unit: 'resumes' };
+                        if (h.title === 'Estudar Programacao / IA') return { ...h, title: 'Study Programming / AI', unit: 'minutes' };
+                        if (h.title === 'Exercicio Fisico') return { ...h, title: 'Physical Exercise', unit: 'minutes' };
+                        return h;
+                    });
+                }
+                if (parsed.tasks.some(t => t.title === 'Responder e-mails de recrutadores no LinkedIn')) {
+                    parsed.tasks = parsed.tasks.map(t => {
+                        if (t.title === 'Responder e-mails de recrutadores no LinkedIn') return { ...t, title: 'Respond to recruiter inquiries on LinkedIn', tag: 'Career' };
+                        if (t.title === 'Configurar chave API Gemini no MetasTracker') return { ...t, title: 'Configure Gemini API key in MetasTracker', tag: 'Setup' };
+                        if (t.title === 'Revisar anotacoes de estudo de IA') return { ...t, title: 'Review AI system architecture study notes', tag: 'Study' };
+                        return t;
+                    });
+                }
+                if (parsed.milestones.some(m => m.title === 'Conseguir um Emprego Melhor em Tecnologia')) {
+                    parsed.milestones = parsed.milestones.map(m => {
+                        if (m.title === 'Conseguir um Emprego Melhor em Tecnologia') {
+                            return {
+                                ...m,
+                                title: 'Land a Senior Software Engineering Role',
+                                notes: 'Target high-impact remote roles with strong engineering culture and continuous learning.',
+                                steps: (m.steps || []).map((s, i) => {
+                                    const defaultSteps = [
+                                        'Optimize LinkedIn profile and technical resume',
+                                        'Submit 5 tailored applications daily',
+                                        'Publish 2 open-source showcase repositories',
+                                        'Practice 20 core system design and coding questions'
+                                    ];
+                                    return { ...s, title: defaultSteps[i] || s.title };
+                                })
+                            };
+                        }
+                        if (m.title === 'Obter Certificacao Profissional Cloud / DevOps') {
+                            return {
+                                ...m,
+                                title: 'Earn Professional Cloud / DevOps Certification',
+                                notes: 'Study 1 hour every day to master cloud architecture fundamentals and mock exams.',
+                                steps: (m.steps || []).map((s, i) => {
+                                    const defaultSteps = [
+                                        'Complete comprehensive online prep course',
+                                        'Pass 3 practice exams with score above 80%',
+                                        'Schedule and sit for official certification exam'
+                                    ];
+                                    return { ...s, title: defaultSteps[i] || s.title };
+                                })
+                            };
+                        }
+                        return m;
+                    });
+                }
+                if (parsed.projects.some(p => p.title === 'Novo Portfolio 2026')) {
+                    parsed.projects = parsed.projects.map(p => {
+                        if (p.title === 'Novo Portfolio 2026') return { ...p, title: 'Portfolio Redesign 2026', description: 'Clean engineering portfolio showcasing production projects, architecture case studies, and achievements.' };
+                        if (p.title === 'Automacao de Tarefas em Python') return { ...p, title: 'Python Job Search Automation', description: 'Automated background script for tracking relevant software engineering roles.' };
+                        return p;
+                    });
+                }
+
                 return parsed;
             }
         } catch (e) {
@@ -173,7 +235,7 @@ export function useMetasTracker() {
         isOpen: false,
         title: '',
         message: '',
-        confirmLabel: 'Confirmar',
+        confirmLabel: 'Confirm',
         isDanger: false,
         onConfirm: null
     });
@@ -199,7 +261,7 @@ export function useMetasTracker() {
         setToasts(prev => prev.filter(t => t.id !== id));
     }, []);
 
-    const askConfirmation = useCallback(({ title, message, confirmLabel = 'Excluir', isDanger = true, onConfirm }) => {
+    const askConfirmation = useCallback(({ title, message, confirmLabel = 'Delete', isDanger = true, onConfirm }) => {
         setConfirmDialog({
             isOpen: true,
             title,
@@ -249,7 +311,7 @@ export function useMetasTracker() {
                             lastCompletedDate = today;
                         }
                         triggerConfetti();
-                        triggeredToast = `Meta "${h.title}" alcancada hoje!`;
+                        triggeredToast = `Habit "${h.title}" goal reached today!`;
                     }
                     return { ...h, current: next, streak, lastCompletedDate };
                 }
@@ -276,7 +338,7 @@ export function useMetasTracker() {
             let updatedHabits;
             if (habitData.id) {
                 updatedHabits = prev.habits.map(h => h.id === habitData.id ? { ...h, ...habitData } : h);
-                showToast('Habito atualizado com sucesso.', 'success');
+                showToast('Habit updated successfully.', 'success');
             } else {
                 const newHabit = {
                     id: 'habit-' + Date.now(),
@@ -286,7 +348,7 @@ export function useMetasTracker() {
                     lastCompletedDate: ''
                 };
                 updatedHabits = [...prev.habits, newHabit];
-                showToast('Habito criado com sucesso!', 'success');
+                showToast('Habit created successfully!', 'success');
             }
             const newState = { ...prev, habits: updatedHabits };
             saveState(newState);
@@ -298,16 +360,16 @@ export function useMetasTracker() {
     const handleDeleteHabit = useCallback((habitId) => {
         const habit = state.habits.find(h => h.id === habitId);
         askConfirmation({
-            title: 'Excluir Habito',
-            message: `Tem certeza que deseja excluir o habito "${habit ? habit.title : ''}"?`,
-            confirmLabel: 'Excluir Habito',
+            title: 'Delete Habit',
+            message: `Are you sure you want to delete "${habit ? habit.title : ''}"?`,
+            confirmLabel: 'Delete Habit',
             isDanger: true,
             onConfirm: () => {
                 setState(prev => {
                     const habits = prev.habits.filter(h => h.id !== habitId);
                     const newState = { ...prev, habits };
                     saveState(newState);
-                    showToast('Habito removido com sucesso.', 'info');
+                    showToast('Habit removed.', 'info');
                     return newState;
                 });
             }
@@ -320,7 +382,7 @@ export function useMetasTracker() {
             let updatedTasks;
             if (taskData.id) {
                 updatedTasks = prev.tasks.map(t => t.id === taskData.id ? { ...t, ...taskData } : t);
-                showToast('Tarefa atualizada com sucesso.', 'success');
+                showToast('Task updated successfully.', 'success');
             } else {
                 const newTask = {
                     id: 'task-' + Date.now(),
@@ -328,7 +390,7 @@ export function useMetasTracker() {
                     createdAt: getTodayDateString()
                 };
                 updatedTasks = [...prev.tasks, newTask];
-                showToast('Tarefa adicionada com sucesso!', 'success');
+                showToast('Task added successfully!', 'success');
             }
             const newState = { ...prev, tasks: updatedTasks };
             saveState(newState);
@@ -353,7 +415,7 @@ export function useMetasTracker() {
             const newState = { ...prev, tasks };
             saveState(newState);
             if (completedTitle) {
-                showToast(`Tarefa "${completedTitle}" concluida!`, 'success');
+                showToast(`Task "${completedTitle}" completed!`, 'success');
             }
             return newState;
         });
@@ -363,16 +425,16 @@ export function useMetasTracker() {
     const handleDeleteTask = useCallback((taskId) => {
         const task = state.tasks.find(t => t.id === taskId);
         askConfirmation({
-            title: 'Excluir Tarefa',
-            message: `Tem certeza que deseja excluir a tarefa "${task ? task.title : ''}"?`,
-            confirmLabel: 'Excluir Tarefa',
+            title: 'Delete Task',
+            message: `Are you sure you want to delete the task "${task ? task.title : ''}"?`,
+            confirmLabel: 'Delete Task',
             isDanger: true,
             onConfirm: () => {
                 setState(prev => {
                     const tasks = prev.tasks.filter(t => t.id !== taskId);
                     const newState = { ...prev, tasks };
                     saveState(newState);
-                    showToast('Tarefa removida.', 'info');
+                    showToast('Task removed.', 'info');
                     return newState;
                 });
             }
@@ -385,14 +447,14 @@ export function useMetasTracker() {
             let updatedProjects;
             if (projectData.id) {
                 updatedProjects = prev.projects.map(p => p.id === projectData.id ? { ...p, ...projectData } : p);
-                showToast('Projeto atualizado com sucesso.', 'success');
+                showToast('Project updated successfully.', 'success');
             } else {
                 const newProject = {
                     id: 'proj-' + Date.now(),
                     ...projectData
                 };
                 updatedProjects = [...prev.projects, newProject];
-                showToast('Projeto adicionado com sucesso!', 'success');
+                showToast('Project created successfully!', 'success');
             }
             const newState = { ...prev, projects: updatedProjects };
             saveState(newState);
@@ -417,7 +479,7 @@ export function useMetasTracker() {
             const newState = { ...prev, projects };
             saveState(newState);
             if (completedTitle) {
-                showToast(`Projeto "${completedTitle}" concluido!`, 'success');
+                showToast(`Project "${completedTitle}" completed!`, 'success');
             }
             return newState;
         });
@@ -448,16 +510,16 @@ export function useMetasTracker() {
     const handleDeleteProject = useCallback((projectId) => {
         const proj = state.projects.find(p => p.id === projectId);
         askConfirmation({
-            title: 'Excluir Projeto',
-            message: `Tem certeza que deseja excluir o projeto "${proj ? proj.title : ''}"?`,
-            confirmLabel: 'Excluir Projeto',
+            title: 'Delete Project',
+            message: `Are you sure you want to delete "${proj ? proj.title : ''}"?`,
+            confirmLabel: 'Delete Project',
             isDanger: true,
             onConfirm: () => {
                 setState(prev => {
                     const projects = prev.projects.filter(p => p.id !== projectId);
                     const newState = { ...prev, projects };
                     saveState(newState);
-                    showToast('Projeto removido.', 'info');
+                    showToast('Project removed.', 'info');
                     return newState;
                 });
             }
@@ -470,14 +532,14 @@ export function useMetasTracker() {
             let updatedMilestones;
             if (milestoneData.id) {
                 updatedMilestones = prev.milestones.map(m => m.id === milestoneData.id ? { ...m, ...milestoneData } : m);
-                showToast('Grande meta atualizada com sucesso.', 'success');
+                showToast('Major goal updated successfully.', 'success');
             } else {
                 const newMilestone = {
                     id: 'milestone-' + Date.now(),
                     ...milestoneData
                 };
                 updatedMilestones = [...prev.milestones, newMilestone];
-                showToast('Grande meta criada com sucesso!', 'success');
+                showToast('Major goal created successfully!', 'success');
             }
             const newState = { ...prev, milestones: updatedMilestones };
             saveState(newState);
@@ -505,7 +567,7 @@ export function useMetasTracker() {
             const newState = { ...prev, milestones };
             saveState(newState);
             if (completedMilestoneTitle) {
-                showToast(`Meta estrategica "${completedMilestoneTitle}" 100% concluida!`, 'success');
+                showToast(`Strategic goal "${completedMilestoneTitle}" 100% completed!`, 'success');
             }
             return newState;
         });
@@ -515,16 +577,16 @@ export function useMetasTracker() {
     const handleDeleteMilestone = useCallback((milestoneId) => {
         const milestone = state.milestones.find(m => m.id === milestoneId);
         askConfirmation({
-            title: 'Excluir Grande Meta',
-            message: `Tem certeza que deseja excluir a meta "${milestone ? milestone.title : ''}"?`,
-            confirmLabel: 'Excluir Meta',
+            title: 'Delete Major Goal',
+            message: `Are you sure you want to delete "${milestone ? milestone.title : ''}"?`,
+            confirmLabel: 'Delete Goal',
             isDanger: true,
             onConfirm: () => {
                 setState(prev => {
                     const milestones = prev.milestones.filter(m => m.id !== milestoneId);
                     const newState = { ...prev, milestones };
                     saveState(newState);
-                    showToast('Meta removida.', 'info');
+                    showToast('Goal removed.', 'info');
                     return newState;
                 });
             }
@@ -534,7 +596,7 @@ export function useMetasTracker() {
     // Reset / Import / Clear
     const handleImportState = useCallback((importedState) => {
         saveState(importedState);
-        showToast('Backup restaurado com sucesso!', 'success');
+        showToast('Backup restored successfully!', 'success');
     }, [saveState, showToast]);
 
     const handleResetState = useCallback(() => {
@@ -542,7 +604,7 @@ export function useMetasTracker() {
         defaultState.lastOpenedDay = getTodayDateString();
         defaultState.dailyLog = { [getTodayDateString()]: 4 };
         saveState(defaultState);
-        showToast('Dados restaurados para o padrao inicial.', 'info');
+        showToast('Data reset to default state.', 'info');
     }, [saveState, showToast]);
 
     const handleClearState = useCallback(() => {
@@ -555,7 +617,7 @@ export function useMetasTracker() {
             dailyLog: {}
         };
         saveState(clearedState);
-        showToast('Todos os dados foram limpos.', 'warning');
+        showToast('All data has been cleared.', 'warning');
     }, [state, saveState, showToast]);
 
     // AI generated items batch import
@@ -574,7 +636,7 @@ export function useMetasTracker() {
                         title: h.title,
                         target: h.target || 1,
                         current: 0,
-                        unit: h.unit || 'vezes',
+                        unit: h.unit || 'times',
                         category: h.category || 'produtividade',
                         icon: h.icon || 'fa-bullseye',
                         streak: 0,
@@ -591,7 +653,7 @@ export function useMetasTracker() {
                         title: t.title,
                         priority: t.priority || 'medium',
                         status: 'todo',
-                        tag: t.tag || 'Geral',
+                        tag: t.tag || 'General',
                         createdAt: getTodayDateString()
                     });
                     addedCount++;
@@ -644,7 +706,7 @@ export function useMetasTracker() {
             saveState(newState);
 
             triggerConfetti();
-            showToast(`${addedCount} novos itens adicionados com sucesso pela IA!`, 'success');
+            showToast(`${addedCount} new items successfully added by AI!`, 'success');
             return newState;
         });
     }, [saveState, showToast]);

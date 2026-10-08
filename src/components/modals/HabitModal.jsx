@@ -9,7 +9,7 @@ export default function HabitModal({
 }) {
     const [title, setTitle] = useState('');
     const [target, setTarget] = useState(1);
-    const [unit, setUnit] = useState('unidades');
+    const [unit, setUnit] = useState('times');
     const [category, setCategory] = useState('produtividade');
     const [icon, setIcon] = useState('fa-bullseye');
 
@@ -17,13 +17,13 @@ export default function HabitModal({
         if (habit && isEdit) {
             setTitle(habit.title || '');
             setTarget(habit.target || 1);
-            setUnit(habit.unit || 'unidades');
+            setUnit(habit.unit || 'times');
             setCategory(habit.category || 'produtividade');
             setIcon(habit.icon || 'fa-bullseye');
         } else {
             setTitle('');
             setTarget(1);
-            setUnit('unidades');
+            setUnit('times');
             setCategory('produtividade');
             setIcon('fa-bullseye');
         }
@@ -49,7 +49,7 @@ export default function HabitModal({
             ...(isEdit && habit ? { id: habit.id } : {}),
             title: title.trim(),
             target: parseInt(target, 10) || 1,
-            unit: unit.trim() || 'unidades',
+            unit: unit.trim() || 'times',
             category,
             icon
         });
@@ -67,24 +67,24 @@ export default function HabitModal({
             <div className="modal-card">
                 <div className="modal-header">
                     <h3 id="habit-modal-title">
-                        {isEdit ? 'Editar Habito' : 'Novo Habito / Meta Diaria'}
+                        {isEdit ? 'Edit Habit' : 'New Habit / Daily Goal'}
                     </h3>
                     <button
                         type="button"
                         className="modal-close"
                         onClick={onClose}
-                        aria-label="Fechar modal"
+                        aria-label="Close modal"
                     >
                         &times;
                     </button>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="habit-title">Nome do Habito / Meta *</label>
+                        <label htmlFor="habit-title">Habit / Goal Name *</label>
                         <input
                             id="habit-title"
                             type="text"
-                            placeholder="Ex: Mandar curriculos, Estudar React, Beber agua"
+                            placeholder="e.g. Send resumes, Study system design, Drink water"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             required
@@ -94,7 +94,7 @@ export default function HabitModal({
 
                     <div className="form-row-2">
                         <div className="form-group">
-                            <label htmlFor="habit-target">Meta Diaria (Quantidade)</label>
+                            <label htmlFor="habit-target">Daily Target (Count)</label>
                             <input
                                 id="habit-target"
                                 type="number"
@@ -105,11 +105,11 @@ export default function HabitModal({
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="habit-unit">Unidade de Medida</label>
+                            <label htmlFor="habit-unit">Unit of Measurement</label>
                             <input
                                 id="habit-unit"
                                 type="text"
-                                placeholder="Ex: curriculos, minutos, paginas"
+                                placeholder="e.g. resumes, minutes, pages, reps"
                                 value={unit}
                                 onChange={(e) => setUnit(e.target.value)}
                             />
@@ -118,41 +118,41 @@ export default function HabitModal({
 
                     <div className="form-row-2">
                         <div className="form-group">
-                            <label htmlFor="habit-category">Categoria</label>
+                            <label htmlFor="habit-category">Category</label>
                             <select
                                 id="habit-category"
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
                             >
-                                <option value="carreira">Carreira / Emprego</option>
-                                <option value="estudo">Estudo & Aprendizado</option>
-                                <option value="saude">Saude & Bem-Estar</option>
-                                <option value="produtividade">Produtividade</option>
+                                <option value="carreira">Career / Jobs</option>
+                                <option value="estudo">Study & Learning</option>
+                                <option value="saude">Health & Wellness</option>
+                                <option value="produtividade">Productivity</option>
                             </select>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="habit-icon">Icone Visual</label>
+                            <label htmlFor="habit-icon">Visual Icon</label>
                             <select
                                 id="habit-icon"
                                 value={icon}
                                 onChange={(e) => setIcon(e.target.value)}
                             >
-                                <option value="fa-file-lines">Curriculo / Documento</option>
-                                <option value="fa-laptop-code">Programacao / Codigo</option>
-                                <option value="fa-book">Leitura / Livro</option>
-                                <option value="fa-dumbbell">Exercicio / Saude</option>
-                                <option value="fa-briefcase">Trabalho / Carreira</option>
-                                <option value="fa-bullseye">Foco / Meta</option>
+                                <option value="fa-file-lines">Resume / Document</option>
+                                <option value="fa-laptop-code">Programming / Code</option>
+                                <option value="fa-book">Reading / Book</option>
+                                <option value="fa-dumbbell">Exercise / Health</option>
+                                <option value="fa-briefcase">Work / Career</option>
+                                <option value="fa-bullseye">Focus / Target</option>
                             </select>
                         </div>
                     </div>
 
                     <div className="modal-actions">
                         <button type="button" className="btn btn-secondary" onClick={onClose}>
-                            Cancelar
+                            Cancel
                         </button>
                         <button type="submit" className="btn btn-primary">
-                            Salvar Habito
+                            Save Habit
                         </button>
                     </div>
                 </form>

@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function AnalyticsTab({ state }) {
     // 1. Weekly completion calculations
-    const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const today = new Date();
     const weeklyData = [];
 
@@ -25,10 +25,10 @@ export default function AnalyticsTab({ state }) {
 
     // 2. Category distribution calculations
     const catMap = {
-        carreira: { name: 'Carreira & Emprego', count: 0, color: 'var(--accent-blue)' },
-        estudo: { name: 'Estudo & Conhecimento', count: 0, color: 'var(--accent-purple)' },
-        saude: { name: 'Saúde & Bem-Estar', count: 0, color: 'var(--accent-green)' },
-        produtividade: { name: 'Produtividade Geral', count: 0, color: 'var(--accent-yellow)' }
+        carreira: { name: 'Career & Professional', count: 0, color: 'var(--accent-blue)' },
+        estudo: { name: 'Study & Learning', count: 0, color: 'var(--accent-purple)' },
+        saude: { name: 'Health & Wellness', count: 0, color: 'var(--accent-green)' },
+        produtividade: { name: 'Productivity & Focus', count: 0, color: 'var(--accent-yellow)' }
     };
 
     const habits = state.habits || [];
@@ -43,7 +43,7 @@ export default function AnalyticsTab({ state }) {
             <div className="analytics-grid">
                 {/* Weekly Habit Completion History */}
                 <div className="content-box">
-                    <h3><i className="fa-solid fa-chart-bar icon-primary"></i> Desempenho dos Últimos 7 Dias</h3>
+                    <h3><i className="fa-solid fa-chart-bar icon-primary"></i> Past 7 Days Performance</h3>
                     <div className="chart-bars-container" id="weekly-bars-chart">
                         {weeklyData.map((day, idx) => (
                             <div key={idx} className="bar-col">
@@ -59,7 +59,7 @@ export default function AnalyticsTab({ state }) {
 
                 {/* Category Distribution */}
                 <div className="content-box">
-                    <h3><i className="fa-solid fa-pie-chart icon-primary"></i> Distribuição por Categorias</h3>
+                    <h3><i className="fa-solid fa-pie-chart icon-primary"></i> Category Distribution</h3>
                     <div className="category-distribution-list" id="category-distribution">
                         {Object.entries(catMap).map(([key, cat]) => {
                             const pct = Math.round((cat.count / totalHabits) * 100);

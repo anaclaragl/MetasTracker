@@ -4,7 +4,7 @@ export default function ConfirmModal({
     isOpen,
     title,
     message,
-    confirmLabel = 'Confirmar',
+    confirmLabel = 'Confirm',
     isDanger = false,
     onConfirm,
     onClose
@@ -48,7 +48,7 @@ export default function ConfirmModal({
                         type="button"
                         className="modal-close"
                         onClick={onClose}
-                        aria-label="Fechar"
+                        aria-label="Close"
                     >
                         &times;
                     </button>
@@ -65,7 +65,7 @@ export default function ConfirmModal({
                         className="btn btn-secondary"
                         onClick={onClose}
                     >
-                        Cancelar
+                        Cancel
                     </button>
                     <button
                         type="button"

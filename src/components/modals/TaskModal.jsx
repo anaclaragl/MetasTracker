@@ -63,24 +63,24 @@ export default function TaskModal({
             <div className="modal-card">
                 <div className="modal-header">
                     <h3 id="task-modal-title">
-                        {isEdit ? 'Editar Tarefa' : 'Nova Tarefa Diaria'}
+                        {isEdit ? 'Edit Task' : 'New Daily Task'}
                     </h3>
                     <button
                         type="button"
                         className="modal-close"
                         onClick={onClose}
-                        aria-label="Fechar modal"
+                        aria-label="Close modal"
                     >
                         &times;
                     </button>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="task-title">Titulo da Tarefa *</label>
+                        <label htmlFor="task-title">Task Title *</label>
                         <input
                             id="task-title"
                             type="text"
-                            placeholder="Ex: Enviar relatorio mensal, Comprar cafe, Ligar para cliente"
+                            placeholder="e.g. Review pull request, Draft proposal, Prepare meeting slides"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             required
@@ -90,37 +90,37 @@ export default function TaskModal({
 
                     <div className="form-row-2">
                         <div className="form-group">
-                            <label htmlFor="task-priority">Prioridade</label>
+                            <label htmlFor="task-priority">Priority</label>
                             <select
                                 id="task-priority"
                                 value={priority}
                                 onChange={(e) => setPriority(e.target.value)}
                             >
-                                <option value="high">Alta Prioridade</option>
-                                <option value="medium">Media Prioridade</option>
-                                <option value="low">Baixa Prioridade</option>
+                                <option value="high">High Priority</option>
+                                <option value="medium">Medium Priority</option>
+                                <option value="low">Low Priority</option>
                             </select>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="task-status">Status Inicial</label>
+                            <label htmlFor="task-status">Initial Status</label>
                             <select
                                 id="task-status"
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)}
                             >
-                                <option value="todo">A Fazer</option>
-                                <option value="in-progress">Em Andamento</option>
-                                <option value="done">Concluida</option>
+                                <option value="todo">To Do</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="done">Completed</option>
                             </select>
                         </div>
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="task-tag">Categoria / Tag (Opcional)</label>
+                        <label htmlFor="task-tag">Category / Tag (Optional)</label>
                         <input
                             id="task-tag"
                             type="text"
-                            placeholder="Ex: Trabalho, Pessoal, Urgente"
+                            placeholder="e.g. Career, Engineering, Urgent"
                             value={tag}
                             onChange={(e) => setTag(e.target.value)}
                         />
@@ -128,10 +128,10 @@ export default function TaskModal({
 
                     <div className="modal-actions">
                         <button type="button" className="btn btn-secondary" onClick={onClose}>
-                            Cancelar
+                            Cancel
                         </button>
                         <button type="submit" className="btn btn-primary">
-                            Salvar Tarefa
+                            Save Task
                         </button>
                     </div>
                 </form>

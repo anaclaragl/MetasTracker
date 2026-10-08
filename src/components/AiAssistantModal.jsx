@@ -21,22 +21,22 @@ export default function AiAssistantModal({
     const handleSaveKey = () => {
         if (apiKey.trim()) {
             localStorage.setItem('gemini_api_key', apiKey.trim());
-            showToast('Chave da API Gemini salva com sucesso!', 'success');
+            showToast('Gemini API key saved successfully!', 'success');
         } else {
             localStorage.removeItem('gemini_api_key');
-            showToast('Chave removida.', 'info');
+            showToast('API key removed.', 'info');
         }
     };
 
     const extractJsonFromText = (text) => {
-        if (!text) throw new Error('A IA não retornou nenhum conteúdo.');
+        if (!text) throw new Error('AI returned an empty response.');
 
         // 1. Direct parse
         try {
             return JSON.parse(text.trim());
         } catch (e) { }
 
-        // 2. Remove markdown code block syntax (```json ... ``` or ``` ... ```)
+        // 2. Remove markdown code block syntax
         const codeMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
         if (codeMatch && codeMatch[1]) {
             try {
@@ -66,19 +66,19 @@ export default function AiAssistantModal({
             } catch (e) { }
         }
 
-        throw new Error('Não foi possível extrair uma estrutura JSON válida dos resultados da IA.');
+        throw new Error('Unable to extract a valid JSON structure from AI output.');
     };
 
     const handleGenerate = async () => {
         const trimmedPrompt = prompt.trim();
         if (!trimmedPrompt) {
-            showToast('Por favor, digite suas rotinas, tarefas ou metas.', 'warning');
+            showToast('Please describe your routines, tasks, or goals.', 'warning');
             return;
         }
 
         const savedKey = localStorage.getItem('gemini_api_key') || apiKey.trim();
         if (!savedKey) {
-            showToast('Por favor, informe sua chave de API gratuita do Google Gemini.', 'warning');
+            showToast('Please enter your free Google Gemini API key.', 'warning');
             return;
         }
 
@@ -87,13 +87,15 @@ export default function AiAssistantModal({
         try {
             const systemInstruction = `You are an AI assistant for MetasTracker.
 Analyze the user's input and extract habits, daily tasks, projects (with subtasks), and long-term milestones.
+All output titles, descriptions, and labels must be written in English.
+Do NOT use emojis in any generated content.
 Respond ONLY with a valid JSON object matching this schema:
 {
   "habits": [
-    { "title": "...", "target": 5, "unit": "currículos|minutos|páginas|vezes", "category": "carreira|estudo|saude|produtividade", "icon": "fa-bullseye" }
+    { "title": "...", "target": 5, "unit": "resumes|minutes|pages|times", "category": "carreira|estudo|saude|produtividade", "icon": "fa-bullseye" }
   ],
   "tasks": [
-    { "title": "...", "priority": "high|medium|low", "tag": "Trabalho|Pessoal|..." }
+    { "title": "...", "priority": "high|medium|low", "tag": "Career|Engineering|Personal" }
   ],
   "projects": [
     { "title": "...", "description": "...", "tags": ["tag1", "tag2"], "subtasks": ["subtask 1", "subtask 2"] }
@@ -154,7 +156,7 @@ Respond ONLY with a valid JSON object matching this schema:
                         }
                     } else {
                         const errData = await response.json().catch(() => ({}));
-                        lastError = errData.error?.message || `HTTP ${response.status} ao consultar modelo ${model}`;
+                        lastError = errData.error?.message || `HTTP ${response.status} when querying model ${model}`;
                     }
                 } catch (err) {
                     lastError = err.message;
@@ -162,15 +164,15 @@ Respond ONLY with a valid JSON object matching this schema:
             }
 
             if (!rawText) {
-                throw new Error(lastError || 'Não foi possível gerar conteúdo com os modelos disponíveis para esta chave.');
+                throw new Error(lastError || 'Unable to generate content with the available models for this key.');
             }
 
             const parsed = extractJsonFromText(rawText);
             setGeneratedItems(parsed);
-            showToast('Itens gerados com sucesso! Confira a prévia abaixo.', 'success');
+            showToast('Items generated successfully! Review them below.', 'success');
         } catch (err) {
             console.error('Gemini error:', err);
-            showToast(`Erro na IA: ${err.message}`, 'error');
+            showToast(`AI Error: ${err.message}`, 'error');
         } finally {
             setIsGenerating(false);
         }
@@ -189,25 +191,25 @@ Respond ONLY with a valid JSON object matching this schema:
     if (generatedItems) {
         if (Array.isArray(generatedItems.habits)) {
             generatedItems.habits.forEach((h, i) => {
-                previewList.push({ type: 'Hábito Diário', title: h.title, subtitle: `${h.target} ${h.unit || 'vezes'} / dia`, key: `h-${i}` });
+                previewList.push({ type: 'Daily Habit', title: h.title, subtitle: `${h.target} ${h.unit || 'times'} / day`, key: `h-${i}` });
             });
         }
         if (Array.isArray(generatedItems.tasks)) {
             generatedItems.tasks.forEach((t, i) => {
-                const priorityLabels = { high: 'alta', medium: 'média', low: 'baixa' };
-                previewList.push({ type: 'Tarefa Diária', title: t.title, subtitle: `Prioridade: ${priorityLabels[t.priority] || 'média'}`, key: `t-${i}` });
+                const priorityLabels = { high: 'high', medium: 'medium', low: 'low' };
+                previewList.push({ type: 'Daily Task', title: t.title, subtitle: `Priority: ${priorityLabels[t.priority] || 'medium'}`, key: `t-${i}` });
             });
         }
         if (Array.isArray(generatedItems.projects)) {
             generatedItems.projects.forEach((p, i) => {
                 const subCount = p.subtasks ? p.subtasks.length : 0;
-                previewList.push({ type: 'Projeto', title: p.title, subtitle: `${subCount} subtarefas`, key: `p-${i}` });
+                previewList.push({ type: 'Project', title: p.title, subtitle: `${subCount} subtasks`, key: `p-${i}` });
             });
         }
         if (Array.isArray(generatedItems.milestones)) {
             generatedItems.milestones.forEach((m, i) => {
                 const stepsCount = m.steps ? m.steps.length : 0;
-                previewList.push({ type: 'Grande Meta', title: m.title, subtitle: `${stepsCount} etapas`, key: `m-${i}` });
+                previewList.push({ type: 'Major Goal', title: m.title, subtitle: `${stepsCount} steps`, key: `m-${i}` });
             });
         }
     }
@@ -216,37 +218,37 @@ Respond ONLY with a valid JSON object matching this schema:
         <div className="modal-overlay active" onClick={(e) => e.target === e.currentTarget && onClose()}>
             <div className="modal-card" style={{ maxWidth: '600px' }}>
                 <div className="modal-header">
-                    <h3><i className="fa-solid fa-wand-magic-sparkles"></i> Assistente com Inteligência Artificial</h3>
-                    <button className="modal-close" onClick={onClose}>&times;</button>
+                    <h3><i className="fa-solid fa-wand-magic-sparkles"></i> AI Plan Generator</h3>
+                    <button className="modal-close" onClick={onClose} aria-label="Close modal">&times;</button>
                 </div>
                 <div className="modal-body">
                     {/* Setup API Key Section */}
-                    <div className="setup-box" style={{ marginBottom: '1.5rem', padding: '1rem', border: '2px solid var(--border-color)', background: 'var(--bg-card)' }}>
+                    <div className="setup-box" style={{ marginBottom: '1.5rem', padding: '1rem', border: '1px solid var(--border-color)', background: 'var(--bg-main)', borderRadius: '8px' }}>
                         <div style={{ marginBottom: '0.75rem' }}>
-                            <strong><i className="fa-solid fa-key"></i> Chave Gratuita do Google Gemini</strong>
+                            <strong><i className="fa-solid fa-key"></i> Free Google Gemini API Key</strong>
                             <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                                A chave é salva apenas no seu navegador. Obtenha uma no Google AI Studio.
+                                Stored locally in your browser. Get a free API key at Google AI Studio.
                             </p>
                         </div>
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
                             <input
                                 type="password"
-                                placeholder="Cole sua chave API aqui (AIzaSy...)"
+                                placeholder="Paste your API key here (AIzaSy...)"
                                 value={apiKey}
                                 onChange={(e) => setApiKey(e.target.value)}
                                 style={{ flex: 1 }}
                             />
-                            <button className="btn btn-secondary" onClick={handleSaveKey}>Salvar Chave</button>
+                            <button className="btn btn-secondary" onClick={handleSaveKey}>Save Key</button>
                         </div>
                     </div>
 
                     {/* Generator prompt */}
                     <div className="form-group">
-                        <label htmlFor="ai-prompt-input">Descreva sua rotina, objetivos ou projeto:</label>
+                        <label htmlFor="ai-prompt-input">Describe your routines, objectives, or projects:</label>
                         <textarea
                             id="ai-prompt-input"
                             rows="4"
-                            placeholder="Ex: Quero estudar programação por 60 min, mandar 5 currículos e beber 2L de água por dia. Também tenho a meta de conseguir um emprego melhor em 3 meses, o que exige atualizar meu currículo e treinar para entrevistas."
+                            placeholder="e.g. I want to study algorithms for 60 min, send 5 job applications, and drink 2L of water daily. I also want to land a senior developer role in 3 months by updating my resume and practicing interview questions."
                             value={prompt}
                             onChange={(e) => setPrompt(e.target.value)}
                         ></textarea>
@@ -258,9 +260,9 @@ Respond ONLY with a valid JSON object matching this schema:
                         disabled={isGenerating}
                     >
                         {isGenerating ? (
-                            <><i className="fa-solid fa-spinner fa-spin"></i> Analisando com Gemini...</>
+                            <><i className="fa-solid fa-spinner fa-spin"></i> Analyzing with Gemini...</>
                         ) : (
-                            <><i className="fa-solid fa-wand-magic-sparkles"></i> Gerar Cartões com IA</>
+                            <><i className="fa-solid fa-wand-magic-sparkles"></i> Generate Items with AI</>
                         )}
                     </button>
 
@@ -269,14 +271,14 @@ Respond ONLY with a valid JSON object matching this schema:
                         <div id="ai-preview-container" style={{ display: 'block', marginTop: '1.5rem' }}>
                             <div style={{ borderTop: '2px dashed var(--border-color)', paddingTop: '1.25rem', marginBottom: '1rem' }}>
                                 <h4 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <span>Prévia de itens gerados:</span>
-                                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Verifique e adicione</span>
+                                    <span>Generated Items Preview:</span>
+                                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Review and accept</span>
                                 </h4>
                             </div>
                             <div id="ai-preview-items-list" className="preview-items-list" style={{ maxHeight: '200px', overflowY: 'auto' }}>
                                 {previewList.length === 0 ? (
                                     <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                                        Nenhum item reconhecido. Tente descrever com mais detalhes.
+                                        No items recognized. Try providing more descriptive details.
                                     </p>
                                 ) : (
                                     previewList.map(item => (
@@ -295,7 +297,7 @@ Respond ONLY with a valid JSON object matching this schema:
                             </div>
                             {previewList.length > 0 && (
                                 <button className="btn btn-primary btn-block" onClick={handleAccept} style={{ marginTop: '1rem' }}>
-                                    Confirmar e Adicionar Todos os {previewList.length} itens
+                                    Confirm and Add All {previewList.length} Items
                                 </button>
                             )}
                         </div>

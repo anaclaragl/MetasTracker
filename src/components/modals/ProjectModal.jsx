@@ -103,24 +103,24 @@ export default function ProjectModal({
             <div className="modal-card">
                 <div className="modal-header">
                     <h3 id="project-modal-title">
-                        {isEdit ? 'Editar Projeto' : 'Novo Projeto / Ideia'}
+                        {isEdit ? 'Edit Project' : 'New Project / Idea'}
                     </h3>
                     <button
                         type="button"
                         className="modal-close"
                         onClick={onClose}
-                        aria-label="Fechar modal"
+                        aria-label="Close modal"
                     >
                         &times;
                     </button>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="project-title">Nome do Projeto *</label>
+                        <label htmlFor="project-title">Project Name *</label>
                         <input
                             id="project-title"
                             type="text"
-                            placeholder="Ex: MetasTracker App, Portfolio 2026, SaaS de Vendas"
+                            placeholder="e.g. MetasTracker App, Portfolio 2026, SaaS Analytics"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             required
@@ -129,11 +129,11 @@ export default function ProjectModal({
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="project-description">Descricao / Conceito</label>
+                        <label htmlFor="project-description">Description / Concept</label>
                         <textarea
                             id="project-description"
                             rows="3"
-                            placeholder="Descreva a ideia do projeto, objetivos e diferenciais..."
+                            placeholder="Describe project vision, features, and key architecture..."
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
@@ -141,23 +141,23 @@ export default function ProjectModal({
 
                     <div className="form-row-2">
                         <div className="form-group">
-                            <label htmlFor="project-status">Status Atual</label>
+                            <label htmlFor="project-status">Current Status</label>
                             <select
                                 id="project-status"
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)}
                             >
-                                <option value="idea">Ideia em Mente</option>
-                                <option value="in-progress">Em Producao</option>
-                                <option value="completed">Concluido / Lancado</option>
+                                <option value="idea">Idea / Backlog</option>
+                                <option value="in-progress">In Development</option>
+                                <option value="completed">Completed / Launched</option>
                             </select>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="project-tags">Tecnologias / Tags (separadas por virgula)</label>
+                            <label htmlFor="project-tags">Technologies / Tags (comma separated)</label>
                             <input
                                 id="project-tags"
                                 type="text"
-                                placeholder="HTML, CSS, Node.js, AI, Design"
+                                placeholder="React, TypeScript, Node.js, AI"
                                 value={tagsInput}
                                 onChange={(e) => setTagsInput(e.target.value)}
                             />
@@ -165,14 +165,14 @@ export default function ProjectModal({
                     </div>
 
                     <div className="form-group">
-                        <label>Lista de Subtarefas (Checklist)</label>
+                        <label>Subtasks Checklist</label>
                         <div id="subtask-inputs-list">
                             {subtaskTitles.map((stTitle, idx) => (
                                 <div className="dynamic-input-row" key={idx}>
                                     <input
                                         type="text"
                                         className="subtask-input-val"
-                                        placeholder="Ex: Criar tela inicial"
+                                        placeholder="e.g. Implement landing page layout"
                                         value={stTitle}
                                         onChange={(e) => handleSubtaskChange(idx, e.target.value)}
                                     />
@@ -180,7 +180,7 @@ export default function ProjectModal({
                                         type="button"
                                         className="btn-icon"
                                         onClick={() => handleRemoveSubtaskField(idx)}
-                                        aria-label="Remover subtarefa"
+                                        aria-label="Remove subtask"
                                     >
                                         &times;
                                     </button>
@@ -192,16 +192,16 @@ export default function ProjectModal({
                             className="btn btn-secondary btn-sm mt-2"
                             onClick={handleAddSubtaskField}
                         >
-                            <i className="fa-solid fa-plus"></i> Adicionar Subtarefa
+                            <i className="fa-solid fa-plus"></i> Add Subtask
                         </button>
                     </div>
 
                     <div className="modal-actions">
                         <button type="button" className="btn btn-secondary" onClick={onClose}>
-                            Cancelar
+                            Cancel
                         </button>
                         <button type="submit" className="btn btn-primary">
-                            Salvar Projeto
+                            Save Project
                         </button>
                     </div>
                 </form>

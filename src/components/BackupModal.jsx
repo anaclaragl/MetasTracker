@@ -24,9 +24,9 @@ export default function BackupModal({
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
-            showToast('Backup exportado com sucesso!', 'success');
+            showToast('Backup exported successfully!', 'success');
         } catch {
-            showToast('Erro ao exportar backup.', 'error');
+            showToast('Failed to export backup.', 'error');
         }
     };
 
@@ -47,13 +47,13 @@ export default function BackupModal({
                 if (parsed.habits && parsed.projects && parsed.milestones) {
                     if (!Array.isArray(parsed.tasks)) parsed.tasks = [];
                     onImportState(parsed);
-                    showToast('Dados importados com sucesso!', 'success');
+                    showToast('Data imported successfully!', 'success');
                     onClose();
                 } else {
-                    showToast('Arquivo JSON invalido. Estrutura incorreta.', 'error');
+                    showToast('Invalid JSON file. Incompatible structure.', 'error');
                 }
             } catch {
-                showToast('Erro ao ler o arquivo de backup.', 'error');
+                showToast('Error reading the backup file.', 'error');
             }
         };
         reader.readAsText(file);
@@ -84,13 +84,13 @@ export default function BackupModal({
                 <div className="modal-header">
                     <h3 id="backup-modal-title">
                         <i className="fa-solid fa-database" style={{ marginRight: '8px' }}></i>
-                        Backup & Gerenciamento de Dados
+                        Backup & Data Management
                     </h3>
                     <button
                         type="button"
                         className="modal-close"
                         onClick={onClose}
-                        aria-label="Fechar modal"
+                        aria-label="Close modal"
                     >
                         &times;
                     </button>
@@ -98,9 +98,9 @@ export default function BackupModal({
                 <div className="modal-body">
                     {confirmingAction === 'reset' ? (
                         <div className="backup-confirm-box">
-                            <h4>Restaurar Dados Padrao?</h4>
+                            <h4>Restore Default Data?</h4>
                             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0.75rem 0' }}>
-                                Isso substituira suas tarefas, habitos e metas atuais pelos dados de exemplo iniciais.
+                                This will replace your current tasks, habits, and goals with the default sample data.
                             </p>
                             <div className="modal-actions" style={{ marginTop: '1rem' }}>
                                 <button
@@ -108,14 +108,14 @@ export default function BackupModal({
                                     className="btn btn-secondary"
                                     onClick={() => setConfirmingAction(null)}
                                 >
-                                    Voltar
+                                    Cancel
                                 </button>
                                 <button
                                     type="button"
                                     className="btn btn-warning"
                                     onClick={handleExecuteReset}
                                 >
-                                    Confirmar Restauracao
+                                    Confirm Restore
                                 </button>
                             </div>
                         </div>
@@ -123,10 +123,10 @@ export default function BackupModal({
                         <div className="backup-confirm-box">
                             <h4 style={{ color: '#ef4444' }}>
                                 <i className="fa-solid fa-triangle-exclamation" style={{ marginRight: '6px' }}></i>
-                                Apagar Todos os Dados?
+                                Erase All Data?
                             </h4>
                             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0.75rem 0' }}>
-                                ATENCAO: Esta acao ira remover permanentemente todos os seus habitos, tarefas, projetos e historicos salvos neste navegador.
+                                WARNING: This action will permanently remove all your habits, tasks, projects, and logs stored in this browser.
                             </p>
                             <div className="modal-actions" style={{ marginTop: '1rem' }}>
                                 <button
@@ -134,14 +134,14 @@ export default function BackupModal({
                                     className="btn btn-secondary"
                                     onClick={() => setConfirmingAction(null)}
                                 >
-                                    Voltar
+                                    Cancel
                                 </button>
                                 <button
                                     type="button"
                                     className="btn btn-danger"
                                     onClick={handleExecuteClear}
                                 >
-                                    Apagar Tudo Definitivamente
+                                    Erase Everything
                                 </button>
                             </div>
                         </div>
@@ -149,20 +149,20 @@ export default function BackupModal({
                         <>
                             {/* Export */}
                             <div style={{ marginBottom: '1.5rem' }}>
-                                <h4 style={{ fontSize: '0.95rem', marginBottom: '0.35rem' }}>Exportar Backup (JSON)</h4>
+                                <h4 style={{ fontSize: '0.95rem', marginBottom: '0.35rem' }}>Export Backup (JSON)</h4>
                                 <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
-                                    Baixe um arquivo seguro contendo todas as suas metas, habitos e projetos.
+                                    Download a safe JSON copy containing your goals, habits, and active projects.
                                 </p>
                                 <button type="button" className="btn btn-primary btn-block" onClick={handleExport}>
-                                    <i className="fa-solid fa-download"></i> Exportar Arquivo
+                                    <i className="fa-solid fa-download"></i> Export File
                                 </button>
                             </div>
 
                             {/* Import */}
                             <div style={{ marginBottom: '1.5rem', borderTop: '2px dashed var(--border-color)', paddingTop: '1.25rem' }}>
-                                <h4 style={{ fontSize: '0.95rem', marginBottom: '0.35rem' }}>Importar Backup (JSON)</h4>
+                                <h4 style={{ fontSize: '0.95rem', marginBottom: '0.35rem' }}>Import Backup (JSON)</h4>
                                 <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
-                                    Carregue um arquivo JSON exportado previamente para restaurar seus dados.
+                                    Load a previously exported JSON backup file to restore your tracker state.
                                 </p>
                                 <input
                                     type="file"
@@ -173,13 +173,13 @@ export default function BackupModal({
                                     onChange={handleFileChange}
                                 />
                                 <button type="button" className="btn btn-secondary btn-block" onClick={handleImportClick}>
-                                    <i className="fa-solid fa-upload"></i> Carregar Arquivo
+                                    <i className="fa-solid fa-upload"></i> Load File
                                 </button>
                             </div>
 
                             {/* Danger Zone Actions */}
                             <div style={{ borderTop: '2px dashed var(--border-color)', paddingTop: '1.25rem' }}>
-                                <h4 style={{ fontSize: '0.95rem', marginBottom: '0.35rem' }}>Outras Acoes</h4>
+                                <h4 style={{ fontSize: '0.95rem', marginBottom: '0.35rem' }}>Maintenance Actions</h4>
                                 <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem' }}>
                                     <button
                                         type="button"
@@ -187,7 +187,7 @@ export default function BackupModal({
                                         style={{ flex: 1 }}
                                         onClick={() => setConfirmingAction('reset')}
                                     >
-                                        Restaurar Padrao
+                                        Restore Defaults
                                     </button>
                                     <button
                                         type="button"
@@ -195,7 +195,7 @@ export default function BackupModal({
                                         style={{ flex: 1 }}
                                         onClick={() => setConfirmingAction('clear')}
                                     >
-                                        Apagar Tudo
+                                        Clear All Data
                                     </button>
                                 </div>
                             </div>

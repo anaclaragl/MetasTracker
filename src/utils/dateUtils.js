@@ -15,9 +15,13 @@ export function getYesterdayDateString() {
     return getTodayDateString(date);
 }
 
-export function formatDateToBR(dateString) {
-    if (!dateString) return 'Sem prazo';
+export function formatDate(dateString) {
+    if (!dateString) return 'No deadline';
     const parts = dateString.split('-');
     if (parts.length !== 3) return dateString;
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    return `${parts[1]}/${parts[2]}/${parts[0]}`;
+}
+
+export function formatDateToBR(dateString) {
+    return formatDate(dateString);
 }

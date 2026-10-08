@@ -28,15 +28,15 @@ export default function ProjectsTab({
                         <input
                             type="text"
                             id="project-search"
-                            placeholder="Buscar projeto ou ideia..."
+                            placeholder="Search projects or ideas..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            aria-label="Buscar projeto ou ideia"
+                            aria-label="Search projects or ideas"
                         />
                     </div>
                 </div>
                 <button className="btn btn-primary" onClick={onAddProjectBtnClick}>
-                    <i className="fa-solid fa-plus"></i> Novo Projeto / Ideia
+                    <i className="fa-solid fa-plus"></i> New Project / Idea
                 </button>
             </div>
 
@@ -45,10 +45,10 @@ export default function ProjectsTab({
                     <div className="empty-state-icon">
                         <i className="fa-solid fa-diagram-project"></i>
                     </div>
-                    <h4>Nenhum projeto encontrado</h4>
-                    <p>Comece anotando uma nova ideia ou estruturando um projeto em producao.</p>
+                    <h4>No projects found</h4>
+                    <p>Start by capturing a new idea or structuring an active development project.</p>
                     <button className="btn btn-primary btn-sm" onClick={onAddProjectBtnClick}>
-                        <i className="fa-solid fa-plus"></i> Criar Novo Projeto
+                        <i className="fa-solid fa-plus"></i> Create New Project
                     </button>
                 </div>
             ) : (
@@ -56,12 +56,12 @@ export default function ProjectsTab({
                     {/* Column 1: Ideas / Backlog */}
                     <div className="kanban-col">
                         <div className="col-header header-idea">
-                            <span className="col-title"><i className="fa-regular fa-lightbulb"></i> Ideias em Mente</span>
+                            <span className="col-title"><i className="fa-regular fa-lightbulb"></i> Ideas & Backlog</span>
                             <span className="col-count">{ideaProjects.length}</span>
                         </div>
                         <div className="col-body">
                             {ideaProjects.length === 0 ? (
-                                <p className="col-empty-msg">Nenhuma ideia no momento</p>
+                                <p className="col-empty-msg">No project ideas at the moment</p>
                             ) : (
                                 ideaProjects.map(proj => {
                                     const totalSub = proj.subtasks ? proj.subtasks.length : 0;
@@ -76,8 +76,8 @@ export default function ProjectsTab({
                                                         type="button"
                                                         className="btn-icon"
                                                         onClick={() => onEditProject(proj)}
-                                                        aria-label={`Editar projeto ${proj.title}`}
-                                                        title="Editar"
+                                                        aria-label={`Edit project ${proj.title}`}
+                                                        title="Edit"
                                                     >
                                                         <i className="fa-solid fa-pen"></i>
                                                     </button>
@@ -85,8 +85,8 @@ export default function ProjectsTab({
                                                         type="button"
                                                         className="btn-icon"
                                                         onClick={() => onDeleteProject(proj.id)}
-                                                        aria-label={`Excluir projeto ${proj.title}`}
-                                                        title="Excluir"
+                                                        aria-label={`Delete project ${proj.title}`}
+                                                        title="Delete"
                                                     >
                                                         <i className="fa-solid fa-trash"></i>
                                                     </button>
@@ -101,7 +101,7 @@ export default function ProjectsTab({
                                             {totalSub > 0 && (
                                                 <div className="subtasks-progress">
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.3rem' }}>
-                                                        <span>Tarefas</span>
+                                                        <span>Subtasks</span>
                                                         <span>{doneSub}/{totalSub}</span>
                                                     </div>
                                                     {proj.subtasks.map(st => (
@@ -110,7 +110,7 @@ export default function ProjectsTab({
                                                                 type="checkbox"
                                                                 checked={!!st.done}
                                                                 onChange={() => onToggleSubtask(proj.id, st.id)}
-                                                                aria-label={`Marcar ${st.title}`}
+                                                                aria-label={`Mark ${st.title}`}
                                                             />
                                                             <span>{st.title}</span>
                                                         </div>
@@ -123,7 +123,7 @@ export default function ProjectsTab({
                                                     className="btn btn-secondary btn-sm"
                                                     onClick={() => onMoveProject(proj.id, 'in-progress')}
                                                 >
-                                                    Mover p/ Em Producao <i className="fa-solid fa-arrow-right"></i>
+                                                    Start Development <i className="fa-solid fa-arrow-right"></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -133,15 +133,15 @@ export default function ProjectsTab({
                         </div>
                     </div>
 
-                    {/* Column 2: In Production */}
+                    {/* Column 2: In Development */}
                     <div className="kanban-col">
                         <div className="col-header header-progress">
-                            <span className="col-title"><i className="fa-solid fa-spinner"></i> Em Producao</span>
+                            <span className="col-title"><i className="fa-solid fa-spinner"></i> In Development</span>
                             <span className="col-count">{inProgressProjects.length}</span>
                         </div>
                         <div className="col-body">
                             {inProgressProjects.length === 0 ? (
-                                <p className="col-empty-msg">Nenhum projeto em producao</p>
+                                <p className="col-empty-msg">No projects in development</p>
                             ) : (
                                 inProgressProjects.map(proj => {
                                     const totalSub = proj.subtasks ? proj.subtasks.length : 0;
@@ -156,8 +156,8 @@ export default function ProjectsTab({
                                                         type="button"
                                                         className="btn-icon"
                                                         onClick={() => onEditProject(proj)}
-                                                        aria-label={`Editar projeto ${proj.title}`}
-                                                        title="Editar"
+                                                        aria-label={`Edit project ${proj.title}`}
+                                                        title="Edit"
                                                     >
                                                         <i className="fa-solid fa-pen"></i>
                                                     </button>
@@ -165,8 +165,8 @@ export default function ProjectsTab({
                                                         type="button"
                                                         className="btn-icon"
                                                         onClick={() => onDeleteProject(proj.id)}
-                                                        aria-label={`Excluir projeto ${proj.title}`}
-                                                        title="Excluir"
+                                                        aria-label={`Delete project ${proj.title}`}
+                                                        title="Delete"
                                                     >
                                                         <i className="fa-solid fa-trash"></i>
                                                     </button>
@@ -181,7 +181,7 @@ export default function ProjectsTab({
                                             {totalSub > 0 && (
                                                 <div className="subtasks-progress">
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.3rem' }}>
-                                                        <span>Tarefas</span>
+                                                        <span>Subtasks</span>
                                                         <span>{doneSub}/{totalSub}</span>
                                                     </div>
                                                     {proj.subtasks.map(st => (
@@ -190,7 +190,7 @@ export default function ProjectsTab({
                                                                 type="checkbox"
                                                                 checked={!!st.done}
                                                                 onChange={() => onToggleSubtask(proj.id, st.id)}
-                                                                aria-label={`Marcar ${st.title}`}
+                                                                aria-label={`Mark ${st.title}`}
                                                             />
                                                             <span>{st.title}</span>
                                                         </div>
@@ -203,14 +203,14 @@ export default function ProjectsTab({
                                                     className="btn btn-secondary btn-sm"
                                                     onClick={() => onMoveProject(proj.id, 'idea')}
                                                 >
-                                                    <i className="fa-solid fa-arrow-left"></i> Ideia
+                                                    <i className="fa-solid fa-arrow-left"></i> Back to Ideas
                                                 </button>
                                                 <button
                                                     type="button"
                                                     className="btn btn-primary btn-sm"
                                                     onClick={() => onMoveProject(proj.id, 'completed')}
                                                 >
-                                                    Concluir <i className="fa-solid fa-check"></i>
+                                                    Complete <i className="fa-solid fa-check"></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -223,12 +223,12 @@ export default function ProjectsTab({
                     {/* Column 3: Completed / Launched */}
                     <div className="kanban-col">
                         <div className="col-header header-completed">
-                            <span className="col-title"><i className="fa-solid fa-circle-check"></i> Concluidos</span>
+                            <span className="col-title"><i className="fa-solid fa-circle-check"></i> Completed</span>
                             <span className="col-count">{completedProjects.length}</span>
                         </div>
                         <div className="col-body">
                             {completedProjects.length === 0 ? (
-                                <p className="col-empty-msg">Nenhum projeto concluido ainda</p>
+                                <p className="col-empty-msg">No completed projects yet</p>
                             ) : (
                                 completedProjects.map(proj => {
                                     const totalSub = proj.subtasks ? proj.subtasks.length : 0;
@@ -243,8 +243,8 @@ export default function ProjectsTab({
                                                         type="button"
                                                         className="btn-icon"
                                                         onClick={() => onEditProject(proj)}
-                                                        aria-label={`Editar projeto ${proj.title}`}
-                                                        title="Editar"
+                                                        aria-label={`Edit project ${proj.title}`}
+                                                        title="Edit"
                                                     >
                                                         <i className="fa-solid fa-pen"></i>
                                                     </button>
@@ -252,8 +252,8 @@ export default function ProjectsTab({
                                                         type="button"
                                                         className="btn-icon"
                                                         onClick={() => onDeleteProject(proj.id)}
-                                                        aria-label={`Excluir projeto ${proj.title}`}
-                                                        title="Excluir"
+                                                        aria-label={`Delete project ${proj.title}`}
+                                                        title="Delete"
                                                     >
                                                         <i className="fa-solid fa-trash"></i>
                                                     </button>
@@ -268,7 +268,7 @@ export default function ProjectsTab({
                                             {totalSub > 0 && (
                                                 <div className="subtasks-progress">
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.3rem' }}>
-                                                        <span>Tarefas</span>
+                                                        <span>Subtasks</span>
                                                         <span>{doneSub}/{totalSub}</span>
                                                     </div>
                                                     {proj.subtasks.map(st => (
@@ -277,7 +277,7 @@ export default function ProjectsTab({
                                                                 type="checkbox"
                                                                 checked={!!st.done}
                                                                 onChange={() => onToggleSubtask(proj.id, st.id)}
-                                                                aria-label={`Marcar ${st.title}`}
+                                                                aria-label={`Mark ${st.title}`}
                                                             />
                                                             <span>{st.title}</span>
                                                         </div>
@@ -290,7 +290,7 @@ export default function ProjectsTab({
                                                     className="btn btn-secondary btn-sm"
                                                     onClick={() => onMoveProject(proj.id, 'in-progress')}
                                                 >
-                                                    <i className="fa-solid fa-rotate-left"></i> Reabrir
+                                                    <i className="fa-solid fa-rotate-left"></i> Reopen
                                                 </button>
                                             </div>
                                         </div>

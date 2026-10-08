@@ -7,13 +7,11 @@ export default function HabitsTab({
     onDeleteHabit,
     onAddHabitBtnClick
 }) {
-    const [categoryFilter, setCategoryFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
 
     const filteredHabits = state.habits.filter(h => {
-        const matchesSearch = h.title.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = categoryFilter === 'all' || h.category === categoryFilter;
-        return matchesSearch && matchesCategory;
+        return h.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+               (h.category && h.category.toLowerCase().includes(searchTerm.toLowerCase()));
     });
 
     return (
@@ -24,27 +22,15 @@ export default function HabitsTab({
                         <i className="fa-solid fa-magnifying-glass"></i>
                         <input
                             type="text"
-                            placeholder="Buscar habito..."
+                            placeholder="Search habits..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            aria-label="Buscar habito"
+                            aria-label="Search habits"
                         />
                     </div>
-                    <select
-                        id="habit-filter-category"
-                        value={categoryFilter}
-                        onChange={(e) => setCategoryFilter(e.target.value)}
-                        aria-label="Filtrar por categoria"
-                    >
-                        <option value="all">Todas as Categorias</option>
-                        <option value="carreira">Carreira / Emprego</option>
-                        <option value="estudo">Estudo & Aprendizado</option>
-                        <option value="saude">Saude & Bem-Estar</option>
-                        <option value="produtividade">Produtividade</option>
-                    </select>
                 </div>
                 <button className="btn btn-primary" onClick={onAddHabitBtnClick}>
-                    <i className="fa-solid fa-plus"></i> Criar Habito
+                    <i className="fa-solid fa-plus"></i> Create Habit
                 </button>
             </div>
 
@@ -54,10 +40,10 @@ export default function HabitsTab({
                         <div className="empty-state-icon">
                             <i className="fa-solid fa-fire-burner"></i>
                         </div>
-                        <h4>Nenhum habito encontrado</h4>
-                        <p>Ajuste os filtros de busca ou comece criando seu primeiro habito diario agora mesmo.</p>
+                        <h4>No habits found</h4>
+                        <p>Adjust your search query or start by building your first daily habit right now.</p>
                         <button className="btn btn-primary btn-sm" onClick={onAddHabitBtnClick}>
-                            <i className="fa-solid fa-plus"></i> Criar Novo Habito
+                            <i className="fa-solid fa-plus"></i> Create New Habit
                         </button>
                     </div>
                 ) : (
@@ -84,8 +70,8 @@ export default function HabitsTab({
                                             type="button"
                                             className="btn-icon"
                                             onClick={() => onEditHabit(habit)}
-                                            aria-label={`Editar habito ${habit.title}`}
-                                            title="Editar"
+                                            aria-label={`Edit habit ${habit.title}`}
+                                            title="Edit"
                                         >
                                             <i className="fa-solid fa-pen"></i>
                                         </button>
@@ -93,8 +79,8 @@ export default function HabitsTab({
                                             type="button"
                                             className="btn-icon"
                                             onClick={() => onDeleteHabit(habit.id)}
-                                            aria-label={`Excluir habito ${habit.title}`}
-                                            title="Excluir"
+                                            aria-label={`Delete habit ${habit.title}`}
+                                            title="Delete"
                                         >
                                             <i className="fa-solid fa-trash"></i>
                                         </button>
@@ -107,7 +93,7 @@ export default function HabitsTab({
                                             {habit.current} <span>/ {habit.target} {habit.unit}</span>
                                         </div>
                                         <span style={{ fontSize: '0.85rem', fontWeight: 700, color: isCompleted ? 'var(--accent-green)' : 'var(--text-secondary)' }}>
-                                            {isCompleted ? 'Meta Concluida' : `${pct}%`}
+                                            {isCompleted ? 'Goal Met' : `${pct}%`}
                                         </span>
                                     </div>
                                     <div className="progress-track">
@@ -116,16 +102,16 @@ export default function HabitsTab({
                                 </div>
 
                                 <div className="habit-footer">
-                                    <div className="streak-badge" title="Dias seguidos completando este habito">
+                                    <div className="streak-badge" title="Consecutive days completing this habit">
                                         <i className="fa-solid fa-fire"></i>
-                                        <span>{habit.streak || 0} {habit.streak === 1 ? 'dia' : 'dias'} em sequencia</span>
+                                        <span>{habit.streak || 0} {habit.streak === 1 ? 'day' : 'days'} streak</span>
                                     </div>
                                     <div className="counter-controls">
                                         <button
                                             type="button"
                                             className="btn-counter"
                                             onClick={() => onAdjustHabit(habit.id, -1)}
-                                            aria-label={`Diminuir contador de ${habit.title}`}
+                                            aria-label={`Decrease counter for ${habit.title}`}
                                         >
                                             -
                                         </button>
@@ -133,7 +119,7 @@ export default function HabitsTab({
                                             type="button"
                                             className="btn-counter"
                                             onClick={() => onAdjustHabit(habit.id, 1)}
-                                            aria-label={`Aumentar contador de ${habit.title}`}
+                                            aria-label={`Increase counter for ${habit.title}`}
                                         >
                                             +
                                         </button>

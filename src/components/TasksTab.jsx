@@ -7,22 +7,19 @@ export default function TasksTab({
     onDeleteTask,
     onAddTaskBtnClick
 }) {
-    const [priorityFilter, setPriorityFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
 
     const priorityLabels = {
-        high: 'Alta Prioridade',
-        medium: 'Media Prioridade',
-        low: 'Baixa Prioridade'
+        high: 'HIGH PRIORITY',
+        medium: 'MEDIUM PRIORITY',
+        low: 'LOW PRIORITY'
     };
 
     const tasks = state.tasks || [];
 
     const filteredTasks = tasks.filter(task => {
-        const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                             (task.tag && task.tag.toLowerCase().includes(searchTerm.toLowerCase()));
-        const matchesPriority = priorityFilter === 'all' || task.priority === priorityFilter;
-        return matchesSearch && matchesPriority;
+        return task.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+               (task.tag && task.tag.toLowerCase().includes(searchTerm.toLowerCase()));
     });
 
     const todoTasks = filteredTasks.filter(t => t.status === 'todo');
@@ -37,26 +34,15 @@ export default function TasksTab({
                         <i className="fa-solid fa-magnifying-glass"></i>
                         <input
                             type="text"
-                            placeholder="Buscar tarefa ou tag..."
+                            placeholder="Search tasks or tags..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            aria-label="Buscar tarefa ou tag"
+                            aria-label="Search tasks or tags"
                         />
                     </div>
-                    <select
-                        id="task-filter-priority"
-                        value={priorityFilter}
-                        onChange={(e) => setPriorityFilter(e.target.value)}
-                        aria-label="Filtrar por prioridade"
-                    >
-                        <option value="all">Todas as Prioridades</option>
-                        <option value="high">Alta Prioridade</option>
-                        <option value="medium">Media Prioridade</option>
-                        <option value="low">Baixa Prioridade</option>
-                    </select>
                 </div>
                 <button className="btn btn-primary" onClick={onAddTaskBtnClick}>
-                    <i className="fa-solid fa-plus"></i> Nova Tarefa
+                    <i className="fa-solid fa-plus"></i> New Task
                 </button>
             </div>
 
@@ -66,23 +52,23 @@ export default function TasksTab({
                     <div className="empty-state-icon">
                         <i className="fa-solid fa-clipboard-list"></i>
                     </div>
-                    <h4>Nenhuma tarefa encontrada</h4>
-                    <p>Adicione novas tarefas para organizar sua rotina no quadro Kanban.</p>
+                    <h4>No tasks found</h4>
+                    <p>Add new tasks to organize your daily routine on the Kanban board.</p>
                     <button className="btn btn-primary btn-sm" onClick={onAddTaskBtnClick}>
-                        <i className="fa-solid fa-plus"></i> Criar Nova Tarefa
+                        <i className="fa-solid fa-plus"></i> Create New Task
                     </button>
                 </div>
             ) : (
                 <div className="kanban-board">
-                    {/* Column 1: A Fazer */}
+                    {/* Column 1: To Do */}
                     <div className="kanban-col">
                         <div className="col-header header-todo">
-                            <span className="col-title"><i className="fa-regular fa-clipboard"></i> A Fazer</span>
+                            <span className="col-title"><i className="fa-regular fa-clipboard"></i> To Do</span>
                             <span className="col-count">{todoTasks.length}</span>
                         </div>
                         <div className="col-body">
                             {todoTasks.length === 0 ? (
-                                <p className="col-empty-msg">Nenhuma tarefa a fazer</p>
+                                <p className="col-empty-msg">No tasks to do</p>
                             ) : (
                                 todoTasks.map(task => (
                                     <div key={task.id} className="task-card">
@@ -93,8 +79,8 @@ export default function TasksTab({
                                                     type="button"
                                                     className="btn-icon"
                                                     onClick={() => onEditTask(task)}
-                                                    aria-label={`Editar tarefa ${task.title}`}
-                                                    title="Editar"
+                                                    aria-label={`Edit task ${task.title}`}
+                                                    title="Edit"
                                                 >
                                                     <i className="fa-solid fa-pen"></i>
                                                 </button>
@@ -102,8 +88,8 @@ export default function TasksTab({
                                                     type="button"
                                                     className="btn-icon"
                                                     onClick={() => onDeleteTask(task.id)}
-                                                    aria-label={`Excluir tarefa ${task.title}`}
-                                                    title="Excluir"
+                                                    aria-label={`Delete task ${task.title}`}
+                                                    title="Delete"
                                                 >
                                                     <i className="fa-solid fa-trash"></i>
                                                 </button>
@@ -111,7 +97,7 @@ export default function TasksTab({
                                         </div>
                                         <div className="task-meta-row">
                                             <span className={`priority-badge priority-${task.priority || 'medium'}`}>
-                                                {priorityLabels[task.priority] || 'Media'}
+                                                {priorityLabels[task.priority] || 'MEDIUM'}
                                             </span>
                                             {task.tag && <span className="tag-pill">{task.tag}</span>}
                                         </div>
@@ -121,7 +107,7 @@ export default function TasksTab({
                                                 className="btn btn-secondary btn-sm"
                                                 onClick={() => onMoveTask(task.id, 'in-progress')}
                                             >
-                                                Iniciar <i className="fa-solid fa-arrow-right"></i>
+                                                Start <i className="fa-solid fa-arrow-right"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -130,15 +116,15 @@ export default function TasksTab({
                         </div>
                     </div>
 
-                    {/* Column 2: Em Andamento */}
+                    {/* Column 2: In Progress */}
                     <div className="kanban-col">
                         <div className="col-header header-progress">
-                            <span className="col-title"><i className="fa-solid fa-spinner"></i> Em Andamento</span>
+                            <span className="col-title"><i className="fa-solid fa-spinner"></i> In Progress</span>
                             <span className="col-count">{inProgressTasks.length}</span>
                         </div>
                         <div className="col-body">
                             {inProgressTasks.length === 0 ? (
-                                <p className="col-empty-msg">Nenhuma tarefa em andamento</p>
+                                <p className="col-empty-msg">No tasks in progress</p>
                             ) : (
                                 inProgressTasks.map(task => (
                                     <div key={task.id} className="task-card">
@@ -149,8 +135,8 @@ export default function TasksTab({
                                                     type="button"
                                                     className="btn-icon"
                                                     onClick={() => onEditTask(task)}
-                                                    aria-label={`Editar tarefa ${task.title}`}
-                                                    title="Editar"
+                                                    aria-label={`Edit task ${task.title}`}
+                                                    title="Edit"
                                                 >
                                                     <i className="fa-solid fa-pen"></i>
                                                 </button>
@@ -158,8 +144,8 @@ export default function TasksTab({
                                                     type="button"
                                                     className="btn-icon"
                                                     onClick={() => onDeleteTask(task.id)}
-                                                    aria-label={`Excluir tarefa ${task.title}`}
-                                                    title="Excluir"
+                                                    aria-label={`Delete task ${task.title}`}
+                                                    title="Delete"
                                                 >
                                                     <i className="fa-solid fa-trash"></i>
                                                 </button>
@@ -167,7 +153,7 @@ export default function TasksTab({
                                         </div>
                                         <div className="task-meta-row">
                                             <span className={`priority-badge priority-${task.priority || 'medium'}`}>
-                                                {priorityLabels[task.priority] || 'Media'}
+                                                {priorityLabels[task.priority] || 'MEDIUM'}
                                             </span>
                                             {task.tag && <span className="tag-pill">{task.tag}</span>}
                                         </div>
@@ -177,14 +163,14 @@ export default function TasksTab({
                                                 className="btn btn-secondary btn-sm"
                                                 onClick={() => onMoveTask(task.id, 'todo')}
                                             >
-                                                <i className="fa-solid fa-arrow-left"></i> A Fazer
+                                                <i className="fa-solid fa-arrow-left"></i> To Do
                                             </button>
                                             <button
                                                 type="button"
                                                 className="btn btn-primary btn-sm"
                                                 onClick={() => onMoveTask(task.id, 'done')}
                                             >
-                                                Concluir <i className="fa-solid fa-check"></i>
+                                                Complete <i className="fa-solid fa-check"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -193,15 +179,15 @@ export default function TasksTab({
                         </div>
                     </div>
 
-                    {/* Column 3: Concluidas */}
+                    {/* Column 3: Completed */}
                     <div className="kanban-col">
                         <div className="col-header header-completed">
-                            <span className="col-title"><i className="fa-solid fa-circle-check"></i> Concluidas</span>
+                            <span className="col-title"><i className="fa-solid fa-circle-check"></i> Completed</span>
                             <span className="col-count">{doneTasks.length}</span>
                         </div>
                         <div className="col-body">
                             {doneTasks.length === 0 ? (
-                                <p className="col-empty-msg">Nenhuma tarefa concluida hoje</p>
+                                <p className="col-empty-msg">No tasks completed yet</p>
                             ) : (
                                 doneTasks.map(task => (
                                     <div key={task.id} className="task-card completed">
@@ -212,8 +198,8 @@ export default function TasksTab({
                                                     type="button"
                                                     className="btn-icon"
                                                     onClick={() => onEditTask(task)}
-                                                    aria-label={`Editar tarefa ${task.title}`}
-                                                    title="Editar"
+                                                    aria-label={`Edit task ${task.title}`}
+                                                    title="Edit"
                                                 >
                                                     <i className="fa-solid fa-pen"></i>
                                                 </button>
@@ -221,8 +207,8 @@ export default function TasksTab({
                                                     type="button"
                                                     className="btn-icon"
                                                     onClick={() => onDeleteTask(task.id)}
-                                                    aria-label={`Excluir tarefa ${task.title}`}
-                                                    title="Excluir"
+                                                    aria-label={`Delete task ${task.title}`}
+                                                    title="Delete"
                                                 >
                                                     <i className="fa-solid fa-trash"></i>
                                                 </button>
@@ -230,7 +216,7 @@ export default function TasksTab({
                                         </div>
                                         <div className="task-meta-row">
                                             <span className={`priority-badge priority-${task.priority || 'medium'}`}>
-                                                {priorityLabels[task.priority] || 'Media'}
+                                                {priorityLabels[task.priority] || 'MEDIUM'}
                                             </span>
                                             {task.tag && <span className="tag-pill">{task.tag}</span>}
                                         </div>
@@ -240,7 +226,7 @@ export default function TasksTab({
                                                 className="btn btn-secondary btn-sm"
                                                 onClick={() => onMoveTask(task.id, 'todo')}
                                             >
-                                                <i className="fa-solid fa-rotate-left"></i> Reabrir
+                                                <i className="fa-solid fa-rotate-left"></i> Reopen
                                             </button>
                                         </div>
                                     </div>

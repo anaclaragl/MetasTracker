@@ -98,24 +98,24 @@ export default function MilestoneModal({
             <div className="modal-card">
                 <div className="modal-header">
                     <h3 id="milestone-modal-title">
-                        {isEdit ? 'Editar Grande Meta' : 'Nova Grande Meta'}
+                        {isEdit ? 'Edit Major Goal' : 'New Major Goal'}
                     </h3>
                     <button
                         type="button"
                         className="modal-close"
                         onClick={onClose}
-                        aria-label="Fechar modal"
+                        aria-label="Close modal"
                     >
                         &times;
                     </button>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="milestone-title">Titulo da Meta *</label>
+                        <label htmlFor="milestone-title">Goal Title *</label>
                         <input
                             id="milestone-title"
                             type="text"
-                            placeholder="Ex: Conseguir um Emprego Melhor como Dev, Certificacao Cloud"
+                            placeholder="e.g. Land a Senior Tech Engineering Role, Cloud DevOps Certification"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             required
@@ -125,7 +125,7 @@ export default function MilestoneModal({
 
                     <div className="form-row-2">
                         <div className="form-group">
-                            <label htmlFor="milestone-target-date">Data Alvo / Prazo Desejado</label>
+                            <label htmlFor="milestone-target-date">Target Date / Deadline</label>
                             <input
                                 id="milestone-target-date"
                                 type="date"
@@ -134,40 +134,40 @@ export default function MilestoneModal({
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="milestone-category">Categoria</label>
+                            <label htmlFor="milestone-category">Category</label>
                             <select
                                 id="milestone-category"
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
                             >
-                                <option value="carreira">Carreira & Profissional</option>
-                                <option value="financas">Financas & Economia</option>
-                                <option value="conhecimento">Conhecimento & Estudos</option>
-                                <option value="pessoal">Projeto Pessoal & Vida</option>
+                                <option value="carreira">Career & Professional</option>
+                                <option value="financas">Finance & Savings</option>
+                                <option value="conhecimento">Knowledge & Learning</option>
+                                <option value="pessoal">Personal & Life</option>
                             </select>
                         </div>
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="milestone-notes">Plano de Acao / Anotacoes Estrategicas</label>
+                        <label htmlFor="milestone-notes">Action Notes / Strategic Summary</label>
                         <textarea
                             id="milestone-notes"
                             rows="3"
-                            placeholder="O que voce precisa fazer para alcancar esta meta? (Ex: Ajustar curriculo, aplicar para 50 vagas, treinar entrevistas)"
+                            placeholder="What key strategy will help you reach this goal? (e.g. Optimize portfolio, apply to targeted roles, practice mock interviews)"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                         />
                     </div>
 
                     <div className="form-group">
-                        <label>Etapas de Conclusao (Checklist)</label>
+                        <label>Action Plan Roadmap (Checklist)</label>
                         <div id="milestone-step-inputs-list">
                             {stepTitles.map((sTitle, idx) => (
                                 <div className="dynamic-input-row" key={idx}>
                                     <input
                                         type="text"
                                         className="milestone-step-input-val"
-                                        placeholder="Ex: Passo de acao..."
+                                        placeholder="e.g. Complete 5 mock interview sessions"
                                         value={sTitle}
                                         onChange={(e) => handleStepChange(idx, e.target.value)}
                                     />
@@ -175,7 +175,7 @@ export default function MilestoneModal({
                                         type="button"
                                         className="btn-icon"
                                         onClick={() => handleRemoveStepField(idx)}
-                                        aria-label="Remover etapa"
+                                        aria-label="Remove step"
                                     >
                                         &times;
                                     </button>
@@ -187,16 +187,16 @@ export default function MilestoneModal({
                             className="btn btn-secondary btn-sm mt-2"
                             onClick={handleAddStepField}
                         >
-                            <i className="fa-solid fa-plus"></i> Adicionar Etapa
+                            <i className="fa-solid fa-plus"></i> Add Step
                         </button>
                     </div>
 
                     <div className="modal-actions">
                         <button type="button" className="btn btn-secondary" onClick={onClose}>
-                            Cancelar
+                            Cancel
                         </button>
                         <button type="submit" className="btn btn-primary">
-                            Salvar Meta
+                            Save Goal
                         </button>
                     </div>
                 </form>

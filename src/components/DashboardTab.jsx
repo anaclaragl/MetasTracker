@@ -7,7 +7,7 @@ export default function DashboardTab({
     onDeleteHabit,
     onSwitchTab
 }) {
-    // 1. Calculations
+    // Calculations
     const habitsCount = state.habits.length;
     const completedTodayCount = state.habits.filter(h => h.current >= h.target).length;
 
@@ -62,10 +62,8 @@ export default function DashboardTab({
                         </svg>
                     </div>
                     <div className="stat-info">
-                        <span className="stat-label">Conclusao Hoje</span>
-                        <h3 style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 600, marginTop: '2px' }}>
-                            Progresso Geral
-                        </h3>
+                        <span className="stat-label">Overall Completion</span>
+                        <h3 id="stat-overall-progress">{overallProgress}%</h3>
                     </div>
                 </div>
 
@@ -73,7 +71,7 @@ export default function DashboardTab({
                 <div className="stat-card">
                     <div className="stat-icon icon-emerald"><i className="fa-solid fa-check-double"></i></div>
                     <div className="stat-info">
-                        <span className="stat-label">Habitos Hoje</span>
+                        <span className="stat-label">Habits Today</span>
                         <h3 id="stat-habits-completed">{completedTodayCount} / {habitsCount}</h3>
                     </div>
                 </div>
@@ -82,8 +80,8 @@ export default function DashboardTab({
                 <div className="stat-card">
                     <div className="stat-icon icon-amber"><i className="fa-solid fa-fire"></i></div>
                     <div className="stat-info">
-                        <span className="stat-label">Maior Sequencia</span>
-                        <h3 id="stat-best-streak">{maxStreak} {maxStreak === 1 ? 'dia' : 'dias'}</h3>
+                        <span className="stat-label">Best Streak</span>
+                        <h3 id="stat-best-streak">{maxStreak} {maxStreak === 1 ? 'day' : 'days'}</h3>
                     </div>
                 </div>
 
@@ -91,7 +89,7 @@ export default function DashboardTab({
                 <div className="stat-card">
                     <div className="stat-icon icon-indigo"><i className="fa-solid fa-rocket"></i></div>
                     <div className="stat-info">
-                        <span className="stat-label">Projetos Ativos</span>
+                        <span className="stat-label">Active Projects</span>
                         <h3 id="stat-active-projects">{activeProjectsCount}</h3>
                     </div>
                 </div>
@@ -100,7 +98,7 @@ export default function DashboardTab({
                 <div className="stat-card">
                     <div className="stat-icon icon-purple"><i className="fa-solid fa-flag-checkered"></i></div>
                     <div className="stat-info">
-                        <span className="stat-label">Grandes Metas</span>
+                        <span className="stat-label">Major Goals</span>
                         <h3 id="stat-milestones-count">{milestonesCount}</h3>
                     </div>
                 </div>
@@ -111,17 +109,17 @@ export default function DashboardTab({
                 {/* Left: Today's Habit Quick List */}
                 <div className="content-box">
                     <div className="box-header">
-                        <h3><i className="fa-solid fa-list-check icon-primary"></i> Habitos Prioritarios Hoje</h3>
+                        <h3><i className="fa-solid fa-list-check icon-primary"></i> Priority Habits Today</h3>
                         <button type="button" className="btn-text" onClick={() => onSwitchTab('habits')}>
-                            Ver Todos <i className="fa-solid fa-arrow-right"></i>
+                            View All <i className="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
                     <div id="dashboard-habits-list" className="items-list">
                         {priorityHabits.length === 0 ? (
                             <div className="empty-sub-state">
-                                <p className="text-muted">Nenhum habito cadastrado ainda.</p>
+                                <p className="text-muted">No habits registered yet.</p>
                                 <button type="button" className="btn btn-secondary btn-sm mt-2" onClick={() => onSwitchTab('habits')}>
-                                    <i className="fa-solid fa-plus"></i> Cadastrar Habito
+                                    <i className="fa-solid fa-plus"></i> Create Habit
                                 </button>
                             </div>
                         ) : (
@@ -137,7 +135,7 @@ export default function DashboardTab({
                                                 <strong style={{ fontSize: '0.9rem' }}>{habit.title}</strong>
                                                 <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                                                     {habit.current} / {habit.target} {habit.unit}
-                                                    {habit.streak > 0 && ` • ${habit.streak} dias seguidos`}
+                                                    {habit.streak > 0 && ` • ${habit.streak} ${habit.streak === 1 ? 'day' : 'days'} streak`}
                                                 </div>
                                             </div>
                                         </div>
@@ -148,7 +146,7 @@ export default function DashboardTab({
                                                     type="button"
                                                     className="btn-counter"
                                                     onClick={() => onAdjustHabit(habit.id, -1)}
-                                                    aria-label={`Diminuir ${habit.title}`}
+                                                    aria-label={`Decrease ${habit.title}`}
                                                 >
                                                     -
                                                 </button>
@@ -156,7 +154,7 @@ export default function DashboardTab({
                                                     type="button"
                                                     className="btn-counter"
                                                     onClick={() => onAdjustHabit(habit.id, 1)}
-                                                    aria-label={`Aumentar ${habit.title}`}
+                                                    aria-label={`Increase ${habit.title}`}
                                                 >
                                                     +
                                                 </button>
@@ -165,8 +163,8 @@ export default function DashboardTab({
                                                 type="button"
                                                 className="btn-icon"
                                                 onClick={() => onEditHabit(habit)}
-                                                aria-label={`Editar ${habit.title}`}
-                                                title="Editar"
+                                                aria-label={`Edit ${habit.title}`}
+                                                title="Edit"
                                             >
                                                 <i className="fa-solid fa-pen"></i>
                                             </button>
@@ -181,17 +179,17 @@ export default function DashboardTab({
                 {/* Right: Featured Projects in Progress */}
                 <div className="content-box">
                     <div className="box-header">
-                        <h3><i className="fa-solid fa-diagram-project icon-primary"></i> Projetos em Producao</h3>
+                        <h3><i className="fa-solid fa-diagram-project icon-primary"></i> Active Development</h3>
                         <button type="button" className="btn-text" onClick={() => onSwitchTab('projects')}>
-                            Ver Todos <i className="fa-solid fa-arrow-right"></i>
+                            View All <i className="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
                     <div id="dashboard-projects-list" className="items-list">
                         {featuredProjects.length === 0 ? (
                             <div className="empty-sub-state">
-                                <p className="text-muted">Nenhum projeto em producao no momento.</p>
+                                <p className="text-muted">No projects in development at the moment.</p>
                                 <button type="button" className="btn btn-secondary btn-sm mt-2" onClick={() => onSwitchTab('projects')}>
-                                    <i className="fa-solid fa-plus"></i> Iniciar Novo Projeto
+                                    <i className="fa-solid fa-plus"></i> Start New Project
                                 </button>
                             </div>
                         ) : (
@@ -205,7 +203,7 @@ export default function DashboardTab({
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <strong style={{ fontSize: '0.9rem' }}>{proj.title}</strong>
                                             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
-                                                {doneSub}/{totalSub} subtarefas ({pct}%)
+                                                {doneSub}/{totalSub} subtasks ({pct}%)
                                             </span>
                                         </div>
                                         {proj.description && (

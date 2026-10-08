@@ -70,7 +70,7 @@ export default function App() {
         }
     };
 
-    // Keyboard Shortcuts (Alt+N for new item, Alt+1..6 for tabs)
+    // Keyboard Shortcuts (Ctrl+K for command menu, Alt+N for new item, Alt+1..6 for tabs)
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.altKey && e.key.toLowerCase() === 'n') {
@@ -114,17 +114,17 @@ export default function App() {
     const getPageHeader = () => {
         switch (activeTab) {
             case 'dashboard':
-                return { title: 'Dashboard', subtitle: 'Visao geral do seu progresso, habitos do dia e projetos ativos.' };
+                return { title: 'Dashboard', subtitle: 'Overview of your daily progress, active habits, and key projects.' };
             case 'habits':
-                return { title: 'Habitos Diarios', subtitle: 'Acompanhe e reforce as tarefas repetitivas do dia a dia.' };
+                return { title: 'Daily Habits', subtitle: 'Build and reinforce positive recurring routines every day.' };
             case 'tasks':
-                return { title: 'Tarefas Diarias', subtitle: 'Quadro Kanban para organizar os afazeres rapidos do seu dia.' };
+                return { title: 'Daily Tasks', subtitle: 'Kanban board to streamline and organize your quick daily to-dos.' };
             case 'projects':
-                return { title: 'Projetos & Ideias', subtitle: 'Painel Kanban para construir seus projetos em producao e novas ideias.' };
+                return { title: 'Projects & Ideas', subtitle: 'Structured kanban workspace for active builds and creative concepts.' };
             case 'milestones':
-                return { title: 'Grandes Metas', subtitle: 'Metas estrategicas de medio e longo prazo com planos de acao praticos.' };
+                return { title: 'Major Goals', subtitle: 'Strategic medium and long-term milestones with step-by-step roadmaps.' };
             case 'analytics':
-                return { title: 'Estatisticas & Analise', subtitle: 'Metricas visuais do seu desempenho nos ultimos dias.' };
+                return { title: 'Analytics & Insights', subtitle: 'Visual metrics and streak history of your daily consistency.' };
             default:
                 return { title: 'MetasTracker', subtitle: '' };
         }
@@ -143,19 +143,19 @@ export default function App() {
                         </div>
                         <div className="brand-text">
                             <h2>Metas<span>Tracker</span></h2>
-                            <span className="brand-tagline">Conquiste Seus Objetivos</span>
+                            <span className="brand-tagline">Achieve Your Goals</span>
                         </div>
                         <button
                             type="button"
                             className="mobile-close-btn"
                             onClick={() => setIsMobileMenuOpen(false)}
-                            aria-label="Fechar menu"
+                            aria-label="Close menu"
                         >
                             &times;
                         </button>
                     </div>
 
-                    <nav className="nav-menu" aria-label="Menu principal">
+                    <nav className="nav-menu" aria-label="Main menu">
                         <button
                             className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
                             onClick={() => handleSwitchTab('dashboard')}
@@ -170,7 +170,7 @@ export default function App() {
                             aria-current={activeTab === 'habits' ? 'page' : undefined}
                         >
                             <i className="fa-solid fa-fire"></i>
-                            <span>Habitos Diarios</span>
+                            <span>Daily Habits</span>
                             <span className="badge">{habitsBadgeCount}</span>
                         </button>
                         <button
@@ -179,7 +179,7 @@ export default function App() {
                             aria-current={activeTab === 'tasks' ? 'page' : undefined}
                         >
                             <i className="fa-solid fa-list-check"></i>
-                            <span>Tarefas Diarias</span>
+                            <span>Daily Tasks</span>
                             <span className="badge">{tasksBadgeCount}</span>
                         </button>
                         <button
@@ -188,7 +188,7 @@ export default function App() {
                             aria-current={activeTab === 'projects' ? 'page' : undefined}
                         >
                             <i className="fa-solid fa-diagram-project"></i>
-                            <span>Projetos & Ideias</span>
+                            <span>Projects & Ideas</span>
                             <span className="badge">{projectsBadgeCount}</span>
                         </button>
                         <button
@@ -197,7 +197,7 @@ export default function App() {
                             aria-current={activeTab === 'milestones' ? 'page' : undefined}
                         >
                             <i className="fa-solid fa-trophy"></i>
-                            <span>Grandes Metas</span>
+                            <span>Major Goals</span>
                         </button>
                         <button
                             className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
@@ -205,40 +205,40 @@ export default function App() {
                             aria-current={activeTab === 'analytics' ? 'page' : undefined}
                         >
                             <i className="fa-solid fa-chart-line"></i>
-                            <span>Estatisticas</span>
+                            <span>Analytics</span>
                         </button>
                     </nav>
 
                     <div className="sidebar-footer">
                         <button
                             className="btn-icon-label"
-                            title="Criar com IA Gratis"
+                            title="Generate with Free AI"
                             onClick={() => {
                                 setIsAiModalOpen(true);
                                 setIsMobileMenuOpen(false);
                             }}
                         >
                             <i className="fa-solid fa-wand-magic-sparkles"></i>
-                            <span>Assistente IA</span>
+                            <span>AI Assistant</span>
                         </button>
                         <button
                             className="btn-icon-label"
-                            title="Alternar Tema"
+                            title="Toggle Theme"
                             onClick={toggleTheme}
                         >
                             <i className={`fa-solid ${state.theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i>
-                            <span>{state.theme === 'dark' ? 'Modo Claro' : 'Modo Escuro'}</span>
+                            <span>{state.theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
                         </button>
                         <button
                             className="btn-icon-label"
-                            title="Exportar/Importar Dados"
+                            title="Export/Import Data"
                             onClick={() => {
                                 setIsBackupModalOpen(true);
                                 setIsMobileMenuOpen(false);
                             }}
                         >
                             <i className="fa-solid fa-database"></i>
-                            <span>Backup & Dados</span>
+                            <span>Backup & Data</span>
                         </button>
                     </div>
                 </aside>
@@ -261,7 +261,7 @@ export default function App() {
                                 type="button"
                                 className="mobile-menu-toggle"
                                 onClick={() => setIsMobileMenuOpen(true)}
-                                aria-label="Abrir menu de navegacao"
+                                aria-label="Open navigation menu"
                             >
                                 <i className="fa-solid fa-bars"></i>
                             </button>
@@ -269,25 +269,6 @@ export default function App() {
                                 <h1>{headerText.title}</h1>
                                 <p className="subtitle">{headerText.subtitle}</p>
                             </div>
-                        </div>
-
-                        <div className="header-actions">
-                            <button
-                                className="btn btn-secondary"
-                                title="Criar itens automaticamente com IA"
-                                onClick={() => setIsAiModalOpen(true)}
-                            >
-                                <i className="fa-solid fa-wand-magic-sparkles"></i>
-                                <span>Assistente IA</span>
-                            </button>
-                            <button
-                                className="btn btn-primary"
-                                title="Atalho: Alt + N"
-                                onClick={handleOpenNewItem}
-                            >
-                                <i className="fa-solid fa-plus"></i>
-                                <span>Novo Item</span>
-                            </button>
                         </div>
                     </header>
 
@@ -421,7 +402,7 @@ export default function App() {
                             className={`toast toast-${toast.type}`}
                             onClick={() => dismissToast(toast.id)}
                             role="status"
-                            title="Clique para fechar"
+                            title="Click to dismiss"
                         >
                             <i className={`fa-solid ${icon}`}></i>
                             <span>{toast.message}</span>
@@ -432,7 +413,7 @@ export default function App() {
                                     e.stopPropagation();
                                     dismissToast(toast.id);
                                 }}
-                                aria-label="Fechar notificacao"
+                                aria-label="Dismiss notification"
                             >
                                 &times;
                             </button>
