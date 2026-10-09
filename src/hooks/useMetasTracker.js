@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getTodayDateString, getYesterdayDateString } from '../utils/dateUtils';
 import { triggerConfetti } from '../utils/confetti';
+import { normalizeCategory } from '../utils/categoryUtils';
 
 const STORAGE_KEY = 'metas_tracker_state';
 
@@ -13,7 +14,7 @@ const DEFAULT_STATE = {
             target: 5,
             current: 2,
             unit: 'resumes',
-            category: 'carreira',
+            category: 'career',
             icon: 'fa-file-lines',
             streak: 4,
             lastCompletedDate: getTodayDateString()
@@ -24,7 +25,7 @@ const DEFAULT_STATE = {
             target: 60,
             current: 60,
             unit: 'minutes',
-            category: 'estudo',
+            category: 'study',
             icon: 'fa-laptop-code',
             streak: 7,
             lastCompletedDate: getTodayDateString()
@@ -35,7 +36,7 @@ const DEFAULT_STATE = {
             target: 30,
             current: 0,
             unit: 'minutes',
-            category: 'saude',
+            category: 'health',
             icon: 'fa-dumbbell',
             streak: 2,
             lastCompletedDate: getYesterdayDateString()
@@ -83,7 +84,7 @@ const DEFAULT_STATE = {
             id: 'milestone-1',
             title: 'Land a Senior Software Engineering Role',
             targetDate: '2026-11-30',
-            category: 'carreira',
+            category: 'career',
             notes: 'Target high-impact remote roles with strong engineering culture and continuous learning.',
             steps: [
                 { id: 'step-1', title: 'Optimize LinkedIn profile and technical resume', done: true },
@@ -96,7 +97,7 @@ const DEFAULT_STATE = {
             id: 'milestone-2',
             title: 'Earn Professional Cloud / DevOps Certification',
             targetDate: '2026-12-15',
-            category: 'conhecimento',
+            category: 'knowledge',
             notes: 'Study 1 hour every day to master cloud architecture fundamentals and mock exams.',
             steps: [
                 { id: 'step-201', title: 'Complete comprehensive online prep course', done: true },
@@ -155,6 +156,14 @@ export function useMetasTracker() {
                     });
                     parsed.lastOpenedDay = today;
                 }
+
+                // Automatically normalize any existing categories to English
+                parsed.habits.forEach(h => {
+                    if (h.category) h.category = normalizeCategory(h.category);
+                });
+                parsed.milestones.forEach(m => {
+                    if (m.category) m.category = normalizeCategory(m.category);
+                });
 
                 // If existing stored data still has Portuguese seed items, update them cleanly to English
                 if (parsed.habits.some(h => h.title === 'Mandar Curriculos')) {
@@ -637,7 +646,7 @@ export function useMetasTracker() {
                         target: h.target || 1,
                         current: 0,
                         unit: h.unit || 'times',
-                        category: h.category || 'produtividade',
+                        category: normalizeCategory(h.category || 'productivity'),
                         icon: h.icon || 'fa-bullseye',
                         streak: 0,
                         lastCompletedDate: ''
@@ -688,7 +697,7 @@ export function useMetasTracker() {
                         id: 'milestone-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
                         title: m.title,
                         targetDate: '',
-                        category: m.category || 'carreira',
+                        category: normalizeCategory(m.category || 'career'),
                         notes: m.notes || '',
                         steps
                     });

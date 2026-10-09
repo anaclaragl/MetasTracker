@@ -37,9 +37,9 @@ export default function DashboardTab({
             {/* Metric Cards Grid (Adaptive 5 cards) */}
             <div className="dashboard-metrics-grid">
                 {/* 1. Progress card */}
-                <div className="stat-card" style={{ gap: '1.25rem' }}>
-                    <div className="metric-circle">
-                        <svg viewBox="0 0 36 36" className="circular-chart" style={{ width: '52px', height: '52px' }}>
+                <div className="stat-card" style={{ gap: '0.9rem' }}>
+                    <div className="metric-circle" style={{ flexShrink: 0 }}>
+                        <svg viewBox="0 0 36 36" className="circular-chart" style={{ width: '46px', height: '46px', flexShrink: 0 }}>
                             <path
                                 className="circle-bg"
                                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"

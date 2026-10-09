@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { formatDate } from '../utils/dateUtils';
+import { getCategoryLabel } from '../utils/categoryUtils';
 
 export default function MilestonesTab({
     state,
@@ -12,9 +13,13 @@ export default function MilestonesTab({
     const milestones = state.milestones || [];
 
     const filteredMilestones = milestones.filter(m => {
-        return m.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-               (m.notes && m.notes.toLowerCase().includes(searchTerm.toLowerCase())) ||
-               (m.category && m.category.toLowerCase().includes(searchTerm.toLowerCase()));
+        const catLabel = getCategoryLabel(m.category).toLowerCase();
+        const rawCat = (m.category || '').toLowerCase();
+        const term = searchTerm.toLowerCase();
+        return m.title.toLowerCase().includes(term) ||
+               (m.notes && m.notes.toLowerCase().includes(term)) ||
+               rawCat.includes(term) ||
+               catLabel.includes(term);
     });
 
     return (
@@ -63,8 +68,8 @@ export default function MilestonesTab({
                                         <div className="milestone-meta">
                                             <span><i className="fa-regular fa-calendar"></i> Due: {formatDate(m.targetDate)}</span>
                                             {m.category && (
-                                                <span className="tag-pill" style={{ textTransform: 'capitalize' }}>
-                                                    <i className="fa-solid fa-tag"></i> {m.category}
+                                                <span className="tag-pill">
+                                                    <i className="fa-solid fa-tag"></i> {getCategoryLabel(m.category)}
                                                 </span>
                                             )}
                                         </div>

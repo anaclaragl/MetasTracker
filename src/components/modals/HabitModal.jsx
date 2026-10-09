@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { normalizeCategory } from '../../utils/categoryUtils';
 
 export default function HabitModal({
     isOpen,
@@ -10,7 +11,7 @@ export default function HabitModal({
     const [title, setTitle] = useState('');
     const [target, setTarget] = useState(1);
     const [unit, setUnit] = useState('times');
-    const [category, setCategory] = useState('produtividade');
+    const [category, setCategory] = useState('productivity');
     const [icon, setIcon] = useState('fa-bullseye');
 
     useEffect(() => {
@@ -18,13 +19,13 @@ export default function HabitModal({
             setTitle(habit.title || '');
             setTarget(habit.target || 1);
             setUnit(habit.unit || 'times');
-            setCategory(habit.category || 'produtividade');
+            setCategory(normalizeCategory(habit.category || 'productivity'));
             setIcon(habit.icon || 'fa-bullseye');
         } else {
             setTitle('');
             setTarget(1);
             setUnit('times');
-            setCategory('produtividade');
+            setCategory('productivity');
             setIcon('fa-bullseye');
         }
     }, [habit, isEdit, isOpen]);
@@ -124,10 +125,10 @@ export default function HabitModal({
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
                             >
-                                <option value="carreira">Career / Jobs</option>
-                                <option value="estudo">Study & Learning</option>
-                                <option value="saude">Health & Wellness</option>
-                                <option value="produtividade">Productivity</option>
+                                <option value="career">Career / Jobs</option>
+                                <option value="study">Study & Learning</option>
+                                <option value="health">Health & Wellness</option>
+                                <option value="productivity">Productivity</option>
                             </select>
                         </div>
                         <div className="form-group">

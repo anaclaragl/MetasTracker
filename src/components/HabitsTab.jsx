@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getCategoryLabel, normalizeCategory } from '../utils/categoryUtils';
 
 export default function HabitsTab({
     state,
@@ -10,8 +11,12 @@ export default function HabitsTab({
     const [searchTerm, setSearchTerm] = useState('');
 
     const filteredHabits = state.habits.filter(h => {
-        return h.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-               (h.category && h.category.toLowerCase().includes(searchTerm.toLowerCase()));
+        const catLabel = getCategoryLabel(h.category).toLowerCase();
+        const rawCat = (h.category || '').toLowerCase();
+        const term = searchTerm.toLowerCase();
+        return h.title.toLowerCase().includes(term) ||
+               rawCat.includes(term) ||
+               catLabel.includes(term);
     });
 
     return (
@@ -50,9 +55,10 @@ export default function HabitsTab({
                     filteredHabits.map(habit => {
                         const pct = Math.min(100, Math.round((habit.current / habit.target) * 100));
                         const isCompleted = habit.current >= habit.target;
+                        const catKey = normalizeCategory(habit.category);
 
                         return (
-                            <div key={habit.id} className={`habit-card category-${habit.category} ${isCompleted ? 'completed' : ''}`}>
+                            <div key={habit.id} className={`habit-card category-${catKey} category-${habit.category} ${isCompleted ? 'completed' : ''}`}>
                                 <div className="habit-header">
                                     <div className="habit-title-area">
                                         <div className="habit-icon-badge">
@@ -60,8 +66,8 @@ export default function HabitsTab({
                                         </div>
                                         <div>
                                             <h4>{habit.title}</h4>
-                                            <span className="habit-category-tag" style={{ textTransform: 'capitalize' }}>
-                                                {habit.category}
+                                            <span className="habit-category-tag">
+                                                {getCategoryLabel(habit.category)}
                                             </span>
                                         </div>
                                     </div>

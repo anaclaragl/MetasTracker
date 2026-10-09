@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { normalizeCategory } from '../../utils/categoryUtils';
 
 export default function MilestoneModal({
     isOpen,
@@ -9,7 +10,7 @@ export default function MilestoneModal({
 }) {
     const [title, setTitle] = useState('');
     const [targetDate, setTargetDate] = useState('');
-    const [category, setCategory] = useState('carreira');
+    const [category, setCategory] = useState('career');
     const [notes, setNotes] = useState('');
     const [stepTitles, setStepTitles] = useState(['']);
 
@@ -17,7 +18,7 @@ export default function MilestoneModal({
         if (milestone && isEdit) {
             setTitle(milestone.title || '');
             setTargetDate(milestone.targetDate || '');
-            setCategory(milestone.category || 'carreira');
+            setCategory(normalizeCategory(milestone.category || 'career'));
             setNotes(milestone.notes || '');
             const titles = milestone.steps && milestone.steps.length > 0
                 ? milestone.steps.map(s => s.title)
@@ -26,7 +27,7 @@ export default function MilestoneModal({
         } else {
             setTitle('');
             setTargetDate('');
-            setCategory('carreira');
+            setCategory('career');
             setNotes('');
             setStepTitles(['']);
         }
@@ -140,10 +141,10 @@ export default function MilestoneModal({
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
                             >
-                                <option value="carreira">Career & Professional</option>
-                                <option value="financas">Finance & Savings</option>
-                                <option value="conhecimento">Knowledge & Learning</option>
-                                <option value="pessoal">Personal & Life</option>
+                                <option value="career">Career & Professional</option>
+                                <option value="finance">Finance & Savings</option>
+                                <option value="knowledge">Knowledge & Learning</option>
+                                <option value="personal">Personal & Life</option>
                             </select>
                         </div>
                     </div>

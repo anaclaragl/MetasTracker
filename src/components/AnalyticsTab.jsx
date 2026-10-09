@@ -1,4 +1,5 @@
 import React from 'react';
+import { normalizeCategory } from '../utils/categoryUtils';
 
 export default function AnalyticsTab({ state }) {
     // 1. Weekly completion calculations
@@ -25,15 +26,16 @@ export default function AnalyticsTab({ state }) {
 
     // 2. Category distribution calculations
     const catMap = {
-        carreira: { name: 'Career & Professional', count: 0, color: 'var(--accent-blue)' },
-        estudo: { name: 'Study & Learning', count: 0, color: 'var(--accent-purple)' },
-        saude: { name: 'Health & Wellness', count: 0, color: 'var(--accent-green)' },
-        produtividade: { name: 'Productivity & Focus', count: 0, color: 'var(--accent-yellow)' }
+        career: { name: 'Career & Professional', count: 0, color: 'var(--accent-blue)' },
+        study: { name: 'Study & Learning', count: 0, color: 'var(--accent-purple)' },
+        health: { name: 'Health & Wellness', count: 0, color: 'var(--accent-green)' },
+        productivity: { name: 'Productivity & Focus', count: 0, color: 'var(--accent-yellow)' }
     };
 
     const habits = state.habits || [];
     habits.forEach(h => {
-        if (catMap[h.category]) catMap[h.category].count++;
+        const norm = normalizeCategory(h.category);
+        if (catMap[norm]) catMap[norm].count++;
     });
 
     const totalHabits = habits.length || 1;
