@@ -15,8 +15,8 @@ export default function HabitsTab({
         const rawCat = (h.category || '').toLowerCase();
         const term = searchTerm.toLowerCase();
         return h.title.toLowerCase().includes(term) ||
-               rawCat.includes(term) ||
-               catLabel.includes(term);
+            rawCat.includes(term) ||
+            catLabel.includes(term);
     });
 
     return (
@@ -35,7 +35,7 @@ export default function HabitsTab({
                     </div>
                 </div>
                 <button className="btn btn-primary" onClick={onAddHabitBtnClick}>
-                    <i className="fa-solid fa-plus"></i> Create Habit
+                    <i className="fa-solid fa-plus"></i> New Habit
                 </button>
             </div>
 

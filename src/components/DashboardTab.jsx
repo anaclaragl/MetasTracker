@@ -62,7 +62,7 @@ export default function DashboardTab({
                         </svg>
                     </div>
                     <div className="stat-info">
-                        <span className="stat-label">Overall Completion</span>
+                        <span className="stat-label">Overall</span>
                         <h3 id="stat-overall-progress">{overallProgress}%</h3>
                     </div>
                 </div>
@@ -89,7 +89,7 @@ export default function DashboardTab({
                 <div className="stat-card">
                     <div className="stat-icon icon-indigo"><i className="fa-solid fa-rocket"></i></div>
                     <div className="stat-info">
-                        <span className="stat-label">Active Projects</span>
+                        <span className="stat-label">Projects</span>
                         <h3 id="stat-active-projects">{activeProjectsCount}</h3>
                     </div>
                 </div>
